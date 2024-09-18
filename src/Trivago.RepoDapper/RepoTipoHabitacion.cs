@@ -16,7 +16,7 @@ public class RepoTipoHabitacion : RepoDapper, IRepoTipoHabitacion
 
         var parametros = new DynamicParameters();
         parametros.Add("p_Nombre", tipoHabitacion.Nombre);
-        parametros.Add("p_idTipo", ParameterDirection.Output);
+        parametros.Add("p_idTipo", direction: ParameterDirection.Output);
                
         _conexion.Execute(storedProcedure, parametros);
 

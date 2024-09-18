@@ -19,7 +19,7 @@ public class RepoUsuario : RepoDapper, IRepoUsuario
         parametros.Add("p_Apellido", usuario.Apellido);
         parametros.Add("p_Mail", usuario.Mail);
         parametros.Add("p_Contraseña", usuario.Contrasena);
-        parametros.Add("p_idUsuario", ParameterDirection.Output);
+        parametros.Add("p_idUsuario", direction: ParameterDirection.Output);
                
         _conexion.Execute(storedProcedure, parametros);
 
@@ -40,8 +40,17 @@ public class RepoUsuario : RepoDapper, IRepoUsuario
         return resultado;
     }
 
-    public Usuario? UsuarioPorPass(string email, string pass)
+    public bool UsuarioPorPass(string email, string pass)
     {
-        throw new NotImplementedException();
+        string storedProcedure = "verificacion_usuario";
+        
+        var parametros = new DynamicParameters();
+        parametros.Add("mail", email);
+        parametros.Add("contra", pass);
+        parametros.Add("resu", direction: ParameterDirection.ReturnValue);
+
+        _conexion.Execute(storedProcedure, parametros);
+        var resultado = parametros.Get<bool>("resu");
+        return resultado;
     }
 }

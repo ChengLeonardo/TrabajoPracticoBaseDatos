@@ -53,6 +53,6 @@ public class RepoHabitacionTest : TestBase
         Habitacion.idHabitacion = alta_Habitacion;
 
         Assert.NotEqual<uint>(0, alta_Habitacion);
-        Assert.NotNull(_repoComentario.Detalle(alta_Habitacion));
+        Assert.NotNull(_repoHabitacion.Detalle(alta_Habitacion));
     }
 }

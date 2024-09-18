@@ -6,31 +6,48 @@ namespace Trivago.RepoDapper.Test;
 
 public class RepoTipoHabitacionTest : TestBase
 {
-    private IRepoHabitacion _repoHabitacion;
-    private IRepoComentario _repoComentario;
-    private IRepoHotel _repoHotel;
-    private RepoTipoHabitacion _repoTipoHabitacion;
+    private IRepoTipoHabitacion _repoTipoHabitacion;
 
     public RepoTipoHabitacionTest() : base()
     {
-        _repoHabitacion = new RepoHabitacion(Conexion);
-        _repoComentario = new RepoComentario(Conexion);
-        _repoHotel = new RepoHotel(Conexion);
         _repoTipoHabitacion = new RepoTipoHabitacion(Conexion);
     }
 
     [Fact]
     public void Insertar()
     {
-        var habitacion = new Habitacion
+        var tipohabitacion = new TipoHabitacion
         {
-            Comentarios = new List<Comentario>(),
-            hotel = _repoHotel.Detalle(1),
-            idHabitacion = 0,
-            PrecioPorNoche = 89,
-            tipoHabitacion = _repoTipoHabitacion.Detalle(1)
+            idTipo = 0,
+            Nombre = "Test"
         };
 
-        habitacion = 
+        var id = _repoTipoHabitacion.Alta(tipohabitacion);
+        Assert.NotEqual<uint>(0, id);
+
+        tipohabitacion.idTipo = id;
+
+        Assert.NotNull(_repoTipoHabitacion.Detalle(id));
+    }
+
+    [Theory]
+    [InlineData("Suite")]
+    [InlineData("Junior suite")]
+    [InlineData("Gran suite")]
+    public void Listar(string nombre)
+    {
+        var lista = _repoTipoHabitacion.Listar();
+
+        Assert.NotNull(lista);
+        Assert.Contains(lista, habitacion => habitacion.Nombre == nombre);
+    }
+
+    [Fact]
+    public void Detalle()
+    {
+        var habitacion = _repoTipoHabitacion.Detalle(1);
+
+        Assert.NotNull(habitacion);
+        Assert.Equal(habitacion.Nombre, "Suite");
     }
 }

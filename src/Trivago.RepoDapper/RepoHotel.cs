@@ -26,7 +26,7 @@ public class RepoHotel : RepoDapper, IRepoHotel
         parametros.Add("p_Direccion", hotel.Direccion);
         parametros.Add("p_Telefono", hotel.Telefono);
         parametros.Add("p_URL", hotel.URL);
-        parametros.Add("p_idHotel",direction: ParameterDirection.Output);
+        parametros.Add("p_idHotel", direction: ParameterDirection.Output);
                
         _conexion.Execute(storedProcedure, parametros);
 
