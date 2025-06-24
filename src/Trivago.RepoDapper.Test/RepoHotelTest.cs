@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Trivago.Core.Persistencia;
 using Trivago.Core.Ubicacion;
 
@@ -6,14 +7,16 @@ namespace Trivago.RepoDapper.Test;
 public class RepoHotelTest : TestBase
 {
     private readonly IRepoHotel _repoHotel;
-    private readonly IRepoHabitacion _repoHabitacion;
+    private readonly IRepoHotelAsync _repoHotelAsync;
 
     public RepoHotelTest() : base()
     {
-        _repoHabitacion = new RepoHabitacion(Conexion);
+
         _repoHotel = new RepoHotel(Conexion);
+        _repoHotelAsync = new RepoHotelAsync(Conexion);
     
     }
+    
     [Fact]
     public void InformarCiudadPorId()
     {
@@ -55,6 +58,52 @@ public class RepoHotelTest : TestBase
     public void InformarHoteles(string direccion)
     {
         var hoteles = _repoHotel.InformarHoteles(1);
+
+        Assert.Contains(hoteles, hotel => hotel.Direccion == direccion);
+    }
+
+    
+    [Fact]
+    public async Task InformarCiudadPorIdAsync()
+    {
+        var detalle = await _repoHotelAsync.DetalleAsync(1);
+        Assert.NotNull(detalle);
+        Assert.Equal(detalle.Direccion, "Rivadavia 1");
+
+    }
+    [Theory]
+    [InlineData("Rivadavia 1")]
+    [InlineData("Rivadavia 2")]
+    [InlineData("Rivadavia 3")]
+    public async Task InformarAsync(string direccion)
+    {
+        var lista = await _repoHotelAsync.ListarAsync();
+        
+        Assert.Contains(lista, hotel => hotel.Direccion == direccion);
+    }
+    [Fact]
+    public async Task InsertarAsync()
+    {
+        Hotel hotel = new Hotel()
+        {
+            Nombre = "San Vernardo",
+            idCiudad= 1,
+            Direccion = "libertador 123",
+            Telefono = "37976723"
+        
+        };
+        var insert_hotel = await _repoHotelAsync.AltaAsync(hotel);
+
+        hotel.idHotel = insert_hotel;
+
+        Assert.NotEqual<uint>(0, insert_hotel);
+        Assert.NotNull(await _repoHotelAsync.DetalleAsync(insert_hotel));
+    }
+    [Theory]
+    [InlineData("Rivadavia 1")]
+    public async Task InformarHotelesAsync(string direccion)
+    {
+        var hoteles = await  _repoHotelAsync.InformarHotelesAsync(1);
 
         Assert.Contains(hoteles, hotel => hotel.Direccion == direccion);
     }
