@@ -65,6 +65,22 @@ public class RepoReservaTest : TestBase
 
     }
 
+    [Fact]
+    public void InformarReservasPorIdHabitacion()
+    {
+        var reservas = _repoReserva.InformarReservasPorIdHabitacion(2);
+        
+        Assert.Contains(reservas, reserva => reserva.Precio == 11111112);
+    }
+
+    [Fact]
+    public void InformarReservasPorIdMetodoPago()
+    {
+        var reservas = _repoReserva.InformarReservasPorIdMetodoPago(3);
+        
+        Assert.Contains(reservas, reserva => reserva.Precio == 11111113);
+    }
+
     
     [Fact]
     public async Task InformarReservaPorIdAsync()
