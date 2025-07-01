@@ -66,7 +66,7 @@ CREATE PROCEDURE insert_tipo_habitacion(
   out p_idTipo int unsigned
 )
 BEGIN
-  INSERT INTO `TipoHabitacion` (`Nombre`) VALUES (p_Nombre);
+  INSERT INTO TipoHabitacion (`Nombre`) VALUES (p_Nombre);
   set p_idTipo = last_insert_id();
 END //
 

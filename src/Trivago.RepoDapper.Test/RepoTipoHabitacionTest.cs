@@ -22,18 +22,14 @@ public class RepoTipoHabitacionTest : TestBase
     [Fact]
     public void Insertar()
     {
-        var habitacion = new Habitacion
+        var testtipoHabitacion = new TipoHabitacion()
         {
-            Comentarios = new List<Comentario>(),
-            hotel = _repoHotel.Detalle(1),
-            idHabitacion = 0,
-            PrecioPorNoche = 89,
-            tipoHabitacion = _repoTipoHabitacion.Detalle(1)
+            Nombre = "test"
         };
 
-        habitacion.idHabitacion = _repoHabitacion.Alta(habitacion);
-        Assert.NotNull(_repoHabitacion.Detalle(habitacion.idHabitacion));
-        Assert.Contains(_repoHabitacion.Listar(), habitacion => habitacion.PrecioPorNoche == 89);
+        testtipoHabitacion.idTipo = _repoTipoHabitacion.Alta(testtipoHabitacion);
+        Assert.NotNull(_repoTipoHabitacion.Detalle(testtipoHabitacion.idTipo));
+        Assert.Contains(_repoTipoHabitacion.Listar(), tipoHabitacion => tipoHabitacion.Nombre == testtipoHabitacion.Nombre);
 
     }
     [Theory]
