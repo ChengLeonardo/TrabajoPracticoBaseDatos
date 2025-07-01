@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Trivago.Core.Persistencia;
 using Trivago.Core.Ubicacion;
 using Xunit;
@@ -27,7 +28,7 @@ public class RepoTipoHabitacionTest : TestBase
     }
 
     [Fact]
-    public void InsertarAsync()
+    public void Insertar()
     {
         var testtipoHabitacion = new TipoHabitacion()
         {
@@ -63,5 +64,41 @@ public class RepoTipoHabitacionTest : TestBase
         Assert.Equal(nombreTipoHabitacion, tipoHabitacion.Nombre);
     }
 
-    //aca faltan
+        [Fact]
+    public async Task InsertarAsync()
+    {
+        var testtipoHabitacion = new TipoHabitacion()
+        {
+            Nombre = "testAsync"
+        };
+
+        testtipoHabitacion.idTipo = await _repoTipoHabitacionAsync.AltaAsync(testtipoHabitacion);
+        Assert.NotNull(await _repoTipoHabitacionAsync.DetalleAsync(testtipoHabitacion.idTipo));
+        Assert.Contains(await _repoTipoHabitacionAsync.ListarAsync(), tipoHabitacion => tipoHabitacion.Nombre == testtipoHabitacion.Nombre);
+
+    }
+    [Theory]
+    [InlineData("Suite")]
+    [InlineData("Junior suite")]
+    [InlineData("Gran suite")]
+    public async Task ListarAsync(string nombreTipoHabitacion)
+    {
+        var lista = await _repoTipoHabitacionAsync.ListarAsync();
+
+        Assert.NotNull(lista);
+        Assert.Contains(lista, tipoHabitacion => tipoHabitacion.Nombre == nombreTipoHabitacion);
+    }
+
+    [Theory]
+    [InlineData("Suite", 1)]
+    [InlineData("Junior suite", 2)]
+    [InlineData("Gran suite", 3)]
+    public async Task DetalleAsync(string nombreTipoHabitacion, uint id)
+    {
+        var tipoHabitacion = await _repoTipoHabitacionAsync.DetalleAsync(id);
+
+        Assert.NotNull(tipoHabitacion);
+        Assert.Equal(nombreTipoHabitacion, tipoHabitacion.Nombre);
+    }
+
 }

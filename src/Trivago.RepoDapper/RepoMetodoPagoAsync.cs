@@ -17,7 +17,7 @@ public class RepoMetodoPagoAsync : RepoDapper, IRepoMetodoPagoAsync
 
         var parametros = new DynamicParameters();
         parametros.Add("p_TipoMedioPago", metodoPago.TipoMedioPago);
-        parametros.Add("p_idMetodoPago", ParameterDirection.Output);
+        parametros.Add("p_idMetodoPago", direction: ParameterDirection.Output);
                
         await _conexion.ExecuteAsync(storedProcedure, parametros);
 

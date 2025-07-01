@@ -84,7 +84,7 @@ public class RepoPaisTest : TestBase
     {
         Pais pais = new Pais()
         {
-            Nombre = "Alemania",
+            Nombre = "Alemanio",
         };
         Assert.Equal<uint>(0, pais.idPais);
         var insert_pais = await _repoPaisAsync.AltaAsync(pais);
@@ -95,4 +95,14 @@ public class RepoPaisTest : TestBase
 
         return insert_pais;
     }
+
+        [Fact]
+    public async Task DetallePorNombreAsync()
+    {
+        var Argentina = await  _repoPaisAsync.DetallePorNombreAsync("Argentina");
+
+        Assert.NotNull(Argentina);
+        Assert.Equal("Argentina", Argentina.Nombre);
+    }
+
 }

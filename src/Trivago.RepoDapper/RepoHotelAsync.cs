@@ -11,10 +11,10 @@ public class RepoHotelAsync : RepoDapper, IRepoHotelAsync
     {
     }
 
-    public async Task<List<Hotel>> InformarHotelesAsync(int idHotel)
+    public async Task<List<Hotel>> InformarHotelesPorIdCiudadAsync(int idCiudad)
     {
-        string sql = "Select * from Hotel where idHotel = @Id";
-        var resultado = await _conexion.QueryAsync<Hotel>(sql, new { Id = idHotel});
+        string sql = "Select * from Hotel where idCiudad = @Id";
+        var resultado = await  _conexion.QueryAsync <Hotel>(sql, new { Id = idCiudad});
         return resultado.ToList();
     }
     public async Task<uint> AltaAsync(Hotel hotel)

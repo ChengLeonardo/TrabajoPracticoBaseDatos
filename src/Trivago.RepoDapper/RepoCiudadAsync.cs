@@ -35,7 +35,7 @@ public class RepoCiudadAsync : RepoDapper, IRepoCiudadAsync
         var resultado = await _conexion.QueryAsync<Ciudad>(sql);
         return resultado.ToList();
     }
-    public async Task<List<Ciudad>> InformarCiudadAsync(uint idPais)
+    public async Task<List<Ciudad>> InformarCiudadPorIdPaisAsync(uint idPais)
     {
         string sql = "Select * from Ciudad where idPais = @IdPais";
         var resultado = await _conexion.QueryAsync<Ciudad>(sql, new { IdPais = idPais} );

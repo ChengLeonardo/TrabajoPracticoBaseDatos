@@ -108,7 +108,7 @@ public class RepoCiudadTest : TestBase
     [InlineData("Santiago del Estero")]
     public async Task informarciudadporpaisAsync(string nombreCiudad)
     {
-        var ciudades = await _repoCiudadAsync.InformarCiudadAsync(1);
+        var ciudades = await _repoCiudadAsync.InformarCiudadPorIdPaisAsync(1);
         
         Assert.NotEmpty(ciudades);
         Assert.Contains(ciudades, ciudad => ciudad.Nombre == nombreCiudad);

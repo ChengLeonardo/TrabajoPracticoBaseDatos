@@ -38,7 +38,7 @@ public class RepoComentarioAsync : RepoDapper, IRepoComentarioAsync
         return resultado.ToList();
     }
 
-    public async Task<List<Comentario>> ListarPorHabitacionAsync(uint idHabitacion)
+    public async Task<List<Comentario>> ListarPorIdHabitacionAsync(uint idHabitacion)
     {
         string sql = "Select * from Comentario where idHabitacion = @IdHabitacion";
         var resultado = await _conexion.QueryAsync<Comentario>(sql, new { idHabitacion = idHabitacion} );

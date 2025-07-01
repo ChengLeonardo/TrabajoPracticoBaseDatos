@@ -19,8 +19,8 @@ public class RepoUsuarioAsync : RepoDapper, IRepoUsuarioAsync
         parametros.Add("p_Nombre", usuario.Nombre);
         parametros.Add("p_Apellido", usuario.Apellido);
         parametros.Add("p_Mail", usuario.Mail);
-        parametros.Add("p_Contraseña", usuario.Contrasena);
-        parametros.Add("p_idUsuario", ParameterDirection.Output);
+        parametros.Add("p_Contrasena", usuario.Contrasena);
+        parametros.Add("p_idUsuario", direction: ParameterDirection.Output);
                
         await _conexion.ExecuteAsync(storedProcedure, parametros);
 
@@ -41,8 +41,16 @@ public class RepoUsuarioAsync : RepoDapper, IRepoUsuarioAsync
         return resultado.ToList();
     }
 
-    public Task<Usuario?> UsuarioPorPassAsync(string email, string pass)
+    public async Task<Usuario?> UsuarioPorPassAsync(string email, string pass)
     {
-        throw new NotImplementedException();
+        Usuario? resultado = null;
+        string sql = "Select verificacion_usuario(@mail, @Contrasena)";
+        var correcto = await _conexion.QuerySingleAsync<int>(sql, new { mail = email, Contrasena = pass});
+        if(correcto == 1)
+        {
+            sql = "Select * from Usuario where Mail = @mail";
+            resultado = await _conexion.QuerySingleAsync<Usuario>(sql, new { mail = email});
+        }
+        return resultado;
     }
 }

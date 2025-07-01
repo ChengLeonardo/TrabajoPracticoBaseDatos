@@ -42,5 +42,19 @@ public class RepoHabitacionAsync : RepoDapper, IRepoHabitacionAsync
         var resultado = await _conexion.QueryAsync<Habitacion>(sql);
         return resultado.ToList();
     }
+
+        public async Task<List<Habitacion>> InformarHabitacionPorIdHotelAsync(uint idHotel)
+    {
+        string sql = "Select * from Habitacion where idHotel = @Id";
+        var resultado = await  _conexion.QueryAsync<Habitacion>(sql, new {Id = idHotel});
+        return resultado.ToList();
+    }
+    
+    public async Task<List<Habitacion>> InformarHabitacionPorIdTipoAsync(uint idTipo)
+    {
+        string sql = "Select * from Habitacion where idTipo = @Id";
+        var resultado = await  _conexion.QueryAsync<Habitacion>(sql, new {Id = idTipo});
+        return resultado.ToList();
+    }
 }
 

@@ -82,7 +82,7 @@ public class RepoComentarioTest : TestBase
     [Fact]
     public async Task ListarPorHabitacionAsync()
     {
-        var lista = await _RepoComentarioAsync.ListarPorHabitacionAsync(1);
+        var lista = await _RepoComentarioAsync.ListarPorIdHabitacionAsync(1);
 
         Assert.Contains(lista, comentario => comentario.Calificacion == 3);
     }

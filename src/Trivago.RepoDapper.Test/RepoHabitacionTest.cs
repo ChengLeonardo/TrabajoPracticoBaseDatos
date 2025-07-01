@@ -63,7 +63,7 @@ public class RepoHabitacionTest : TestBase
         Habitacion.idHabitacion = alta_Habitacion;
 
         Assert.NotEqual<uint>(0, alta_Habitacion);
-        Assert.NotNull(_repoComentario.Detalle(alta_Habitacion));
+        Assert.NotNull(_repoHabitacion.Detalle(alta_Habitacion));
     }
     [Fact]
     public void InformarHabitacionPorIdHotel()
@@ -121,5 +121,23 @@ public class RepoHabitacionTest : TestBase
 
         Assert.NotEqual<uint>(0, alta_Habitacion);
         Assert.NotNull(await _repoComentarioAsync.DetalleAsync(alta_Habitacion));
+    }
+
+        [Fact]
+    public async Task InformarHabitacionPorIdHotelAsync()
+    {
+        var habitaciones = await _repoHabitacionAsync.InformarHabitacionPorIdHotelAsync(2);
+
+        Assert.NotNull(habitaciones);
+        Assert.Contains(habitaciones, habitacion => habitacion.PrecioPorNoche == (decimal)20000.00);
+    }
+
+    [Fact]
+    public async Task InformarHabitacionPorIdTipoAsync()
+    {
+        var habitaciones = await  _repoHabitacionAsync.InformarHabitacionPorIdTipoAsync(3);
+
+        Assert.NotNull(habitaciones);
+        Assert.Contains(habitaciones, habitacion => habitacion.PrecioPorNoche == (decimal)30000.00);
     }
 }

@@ -107,12 +107,12 @@ public class RepoReservaTest : TestBase
         var efectivo = await _repoMetodoPagoAsync.DetalleAsync(1)!;
         var reserva = new Reserva 
             {
-                Entrada = new DateTime(2025, 02, 1),
+                Entrada = new DateTime(2027, 02, 1),
                 habitacion = habitacion,
                 idReserva = 0,
                 idUsuario = 1,
                 metodoPago = efectivo,
-                Salida = new DateTime(2025, 04, 2),
+                Salida = new DateTime(2027, 04, 2),
                 Precio = 0,
                 Telefono = 123456789
             };
@@ -120,5 +120,21 @@ public class RepoReservaTest : TestBase
         var idOUT = await _repoReservaAsync.AltaAsync(reserva);
         
         Assert.NotEqual<uint>(0, reserva.idReserva);
+    }
+
+        [Fact]
+    public async Task InformarReservasPorIdHabitacionAsync()
+    {
+        var reservas = await _repoReservaAsync.InformarReservasPorIdHabitacionAsync(2);
+        
+        Assert.Contains(reservas, reserva => reserva.Telefono == 11111112);
+    }
+
+    [Fact]
+    public async Task InformarReservasPorIdMetodoPagoAsync()
+    {
+        var reservas = await _repoReservaAsync.InformarReservasPorIdMetodoPagoAsync(3);
+        
+        Assert.Contains(reservas, reserva => reserva.Telefono == 11111113);
     }
 }

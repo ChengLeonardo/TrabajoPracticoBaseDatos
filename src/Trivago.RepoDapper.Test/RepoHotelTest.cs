@@ -88,8 +88,8 @@ public class RepoHotelTest : TestBase
         {
             Nombre = "San Vernardo",
             idCiudad= 1,
-            Direccion = "libertador 123",
-            Telefono = "37976723"
+            Direccion = "libertador 124",
+            Telefono = "37976724"
         
         };
         var insert_hotel = await _repoHotelAsync.AltaAsync(hotel);
@@ -103,7 +103,7 @@ public class RepoHotelTest : TestBase
     [InlineData("Rivadavia 1")]
     public async Task InformarHotelesAsync(string direccion)
     {
-        var hoteles = await  _repoHotelAsync.InformarHotelesAsync(1);
+        var hoteles = await  _repoHotelAsync.InformarHotelesPorIdCiudadAsync(1);
 
         Assert.Contains(hoteles, hotel => hotel.Direccion == direccion);
     }
