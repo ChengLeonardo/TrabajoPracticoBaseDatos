@@ -42,7 +42,7 @@ public class RepoUsuario : RepoDapper, IRepoUsuario
 
     public Usuario? UsuarioPorPass(string email, string pass)
     {
-        string sql = "Select * from Usuario where Mail = @mail and Contrasena = @Contrasena";
+        string sql = "call verificacion_usuario(@mail, @Contrasena)";
         var resultado = _conexion.QuerySingle<Usuario>(sql, new { mail = email, Contrasena = pass});
         return resultado;
     }

@@ -51,7 +51,7 @@ public class RepoReserva : RepoDapper, IRepoReserva
 
     public List<Reserva> InformarReservasPorIdMetodoPago(uint idMetodoPago)
     {
-        string sql = "Select * from Reserva where idMetodoPago = @Id";
+        string sql = "Select * from Reserva where idMetododePago = @Id";
         var resultado = _conexion.Query<Reserva>(sql, new { Id = idMetodoPago}).ToList();
         return resultado;
     }

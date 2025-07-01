@@ -13,7 +13,6 @@ public class RepoCiudad : RepoDapper, IRepoCiudad
         parametros.Add("p_nombre", ciudad.Nombre);
         parametros.Add("p_idPais", ciudad.idPais);
         parametros.Add("p_idCiudad", direction: ParameterDirection.Output);
-               
         _conexion.Execute(storedProcedure, parametros);
 
         ciudad.idCiudad = parametros.Get<uint>("p_idCiudad");
