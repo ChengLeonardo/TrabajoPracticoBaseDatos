@@ -19,5 +19,5 @@ drop trigger if exists befInsUsuario$$
 create trigger befInsUsuario before insert on Usuario
 for each row
 begin
-set New.Contraseña = sha2(New.Contraseña, 256);
+set New.Contrasena = sha2(New.Contrasena, 256);
 end$$

@@ -16,7 +16,7 @@ public class RepoMetodoPago : RepoDapper, IRepoMetodoPago
 
         var parametros = new DynamicParameters();
         parametros.Add("p_TipoMedioPago", metodoPago.TipoMedioPago);
-        parametros.Add("p_idMetodoPago", ParameterDirection.Output);
+        parametros.Add("p_idMetodoPago", direction: ParameterDirection.Output);
                
         _conexion.Execute(storedProcedure, parametros);
 

@@ -48,12 +48,12 @@ public class RepoReservaTest : TestBase
         var efectivo = _repoMetodoPago.Detalle(1)!;
         var reserva = new Reserva 
             {
-                Entrada = new DateTime(2025, 02, 1),
+                Entrada = new DateTime(2026, 02, 1),
                 habitacion = habitacion,
                 idReserva = 0,
                 idUsuario = 1,
                 metodoPago = efectivo,
-                Salida = new DateTime(2025, 04, 2),
+                Salida = new DateTime(2026, 04, 2),
                 Precio = 0,
                 Telefono = 123456789
             };
@@ -70,7 +70,7 @@ public class RepoReservaTest : TestBase
     {
         var reservas = _repoReserva.InformarReservasPorIdHabitacion(2);
         
-        Assert.Contains(reservas, reserva => reserva.Precio == 11111112);
+        Assert.Contains(reservas, reserva => reserva.Telefono == 11111112);
     }
 
     [Fact]
@@ -78,7 +78,7 @@ public class RepoReservaTest : TestBase
     {
         var reservas = _repoReserva.InformarReservasPorIdMetodoPago(3);
         
-        Assert.Contains(reservas, reserva => reserva.Precio == 11111113);
+        Assert.Contains(reservas, reserva => reserva.Telefono == 11111113);
     }
 
     

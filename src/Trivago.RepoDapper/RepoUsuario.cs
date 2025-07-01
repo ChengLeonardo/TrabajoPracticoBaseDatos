@@ -1,4 +1,5 @@
 using System.Data;
+using System.Net.Mail;
 using Trivago.Core.Persistencia;
 using Trivago.Core.Ubicacion;
 
@@ -18,8 +19,8 @@ public class RepoUsuario : RepoDapper, IRepoUsuario
         parametros.Add("p_Nombre", usuario.Nombre);
         parametros.Add("p_Apellido", usuario.Apellido);
         parametros.Add("p_Mail", usuario.Mail);
-        parametros.Add("p_Contraseña", usuario.Contrasena);
-        parametros.Add("p_idUsuario", ParameterDirection.Output);
+        parametros.Add("p_Contrasena", usuario.Contrasena);
+        parametros.Add("p_idUsuario", direction: ParameterDirection.Output);
                
         _conexion.Execute(storedProcedure, parametros);
 
@@ -42,8 +43,14 @@ public class RepoUsuario : RepoDapper, IRepoUsuario
 
     public Usuario? UsuarioPorPass(string email, string pass)
     {
-        string sql = "Select * from Usuario where Mail = @mail and Contrasena = @Contrasena";
-        var resultado = _conexion.QuerySingle<Usuario>(sql, new { mail = email, Contrasena = pass});
+        Usuario? resultado = null;
+        string sql = "Select verificacion_usuario(@mail, @Contrasena)";
+        var correcto = _conexion.QuerySingle<int>(sql, new { mail = email, Contrasena = pass});
+        if(correcto == 1)
+        {
+            sql = "Select * from Usuario where Mail = @mail";
+            resultado = _conexion.QuerySingle<Usuario>(sql, new { mail = email});
+        }
         return resultado;
     }
 }
