@@ -9,6 +9,14 @@ Material de consumo para las consultas de Base de Datos.
 
 <img src =https://github.com/user-attachments/assets/21362105-7167-4b4f-918d-c02b37c3b250>
 
+# Ejemplo MinimalAPI
+
+## Pre-requisitos 📋
+
+  * SDK .NET 8
+  * Visual Studio Code
+  * MySQL Server 8.0.40
+
 ## Comenzando 🚀
 
 Clonar el repositorio github, desde Github Desktop o ejecutar en la terminal o CMD:
@@ -16,20 +24,36 @@ Clonar el repositorio github, desde Github Desktop o ejecutar en la terminal o C
 ```
 git clone https://github.com/ChengLeonardo/TrabajoPracticoBaseDatos.git
 ```
+Cambiar al branch actual:
 
-## Pre-requisitos 📋
-
-- MySQL 8 🐬
+```
+git switch MinimalApi
+```
 
 ## Despliegue 📦
 
-1. Abrir la terminal en el directorio donde están los scripts (recomendamos tener MySQL agregado en tus **Variables de entorno**).
+1.  Abrir la terminal en el directorio raíz e instalar la BD por ejemplo con ingresando al SGBD por terminal `mysql -u 5to_agbd -p`, luego ingresar la pass y una vez dentro del shell de MySQL, ejecutar el comando `SOURCE script.sql`.
 
-1. Ejecutar el comando: `mysql -u usuario -p` donde *usuario* es el nombre de usuario con el que entras al sistema. Si estas en la secu podes usar: `mysql -u root -p`. Se te va a preguntar por la contraseña de tu usuario, recorda que si estas en la secu la misma es *root*.
+2.  Crear el archivo `appsettings.json` dentro del directorio `MinimalApi` con el contenido:
 
-1. Ya dentro del cliente de `MySQL` tipeamos `source install.sql` y nos debería quedar algo como: `mysql> source install.sql` ; le damos _Enter_.
+    ```json
+    {
+      "Logging": {
+        "LogLevel": {
+          "Default": "Information",
+          "Microsoft.AspNetCore": "Warning"
+        }
+      },
+      "AllowedHosts": "*",
+      "ConnectionStrings": {
+        "MySQL": "Server=localhost;User=root;Password=root;Database=5to_trivago;"
+      }
+    }
+    ```
 
-1. Esperamos que termine de correr el comando y salimos de la _shell_ de MySQL con el comando `exit`.
+3.  Abrir la terminal en el directorio donde están los scripts, entrar al directorio `MinimaApi` y ejecutar el comando `dotnet run`. Esto va a dejar en una terminal corriendo el servicio de tu API REST.
+
+4.  Podemos ver la documentación y consumir nuestra API REST, ingresando a **http://localhost:5250/scalar/**. Utiliza esta interfaz para interactuar directamente con los endpoints de la API. Por ejemplo, puedes realizar peticiones GET al endpoint `/pais` para consumir la API.
 
 ## Colaboradores
 
