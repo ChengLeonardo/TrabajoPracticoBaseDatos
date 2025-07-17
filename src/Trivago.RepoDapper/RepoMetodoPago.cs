@@ -26,9 +26,22 @@ public class RepoMetodoPago : RepoDapper, IRepoMetodoPago
 
     public MetodoPago? Detalle(uint id)
     {
-        string sql = "Select * from MetodoPago where idMetodoPago = @Id LIMIT 1";
-        var resultado = _conexion.QuerySingleOrDefault<MetodoPago>(sql, new { Id = id});
-        return resultado;
+        string sql = @" select * from MetodoPago
+                        where idMetodoPago = @Id
+                        LIMIT 1;
+
+                        select * from Reserva
+                        Where idMetododePago = @Id;
+                        ";
+        using ( var multi = _conexion.QueryMultiple(sql, new { Id = id }))
+        {
+            var MetodoPago = multi.ReadSingleOrDefault<MetodoPago>();
+            if (MetodoPago != null)
+            {
+                MetodoPago.Reservas = multi.Read<Reserva>().ToList();
+            }
+            return MetodoPago;
+        }
     }
 
     public List<MetodoPago> Listar()

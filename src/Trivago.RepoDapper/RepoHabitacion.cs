@@ -31,9 +31,26 @@ public class RepoHabitacion : RepoDapper, IRepoHabitacion
 
     public Habitacion? Detalle(uint id)
     {
-        string sql = "Select * from Habitacion where idHabitacion = @Id LIMIT 1";
-        var resultado = _conexion.QuerySingleOrDefault<Habitacion>(sql, new { Id = id});
-        return resultado;
+                string sql = @" select * from Habitacion
+                        where idHabitacion = @Id
+                        LIMIT 1;
+
+                        select * from Comentario
+                        Where idHabitacion = @Id;
+
+                        select * from Reserva
+                        where idHabitacion = @Id;
+                        ";
+        using ( var multi = _conexion.QueryMultiple(sql, new { Id = id }))
+        {
+            var habitacion = multi.ReadSingleOrDefault<Habitacion>();
+            if (habitacion != null)
+            {
+                habitacion.Comentarios = multi.Read<Comentario>().ToList();
+                habitacion.Reservas = multi.Read<Reserva>().ToList();
+            }
+            return habitacion;
+        }
     }
 
     public List<Habitacion> Listar()

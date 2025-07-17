@@ -12,7 +12,7 @@ public class RepoCiudadAsync : RepoDapper, IRepoCiudadAsync
         string storedProcedure = "insert_ciudad";
 
         var parametros = new DynamicParameters();
-        parametros.Add("p_nombre", ciudad.Nombre);
+        parametros.Add("p_nombre", ciudad.nombre);
         parametros.Add("p_idPais", ciudad.idPais);
         parametros.Add("p_idCiudad", direction: ParameterDirection.Output);
                
@@ -24,9 +24,23 @@ public class RepoCiudadAsync : RepoDapper, IRepoCiudadAsync
 
     public async Task<Ciudad>? DetalleAsync(uint id)
     {
-        string sql = "Select * from Ciudad where idCiudad = @Id LIMIT 1";
-        var resultado = _conexion.QuerySingleOrDefaultAsync<Ciudad>(sql, new { Id = id});
-        return await resultado;
+        string sql = @" select * from Ciudad
+                        where idCiudad = @Id
+                        LIMIT 1;
+
+                        select * from Hotel
+                        Where idCiudad = @Id;
+                        ";
+        using ( var multi = await _conexion.QueryMultipleAsync(sql, new { Id = id }))
+        {
+            var ciudad = await multi.ReadSingleOrDefaultAsync<Ciudad>();
+            if (ciudad != null)
+            {
+                var Hoteles = await multi.ReadAsync<Hotel>();
+                ciudad.Hoteles = Hoteles.ToList();
+            }
+            return ciudad;
+        }
     }
 
     public async Task<List<Ciudad>> ListarAsync()

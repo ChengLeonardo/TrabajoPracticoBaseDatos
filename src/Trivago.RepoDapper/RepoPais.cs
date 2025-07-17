@@ -23,9 +23,22 @@ public class RepoPais : RepoDapper, IRepoPais
 
     public Pais? Detalle(uint id)
     {
-        string sql = "Select * from Pais where idPais = @Id LIMIT 1";
-        var resultado = _conexion.QuerySingleOrDefault<Pais>(sql, new { Id = id});
-        return resultado;
+        string sql = @" select * from Pais
+                        where idPais = @Id
+                        LIMIT 1;
+
+                        select * from Ciudad
+                        Where idPais = @Id;
+                        ";
+        using ( var multi = _conexion.QueryMultiple(sql, new { Id = id }))
+        {
+            var Pais = multi.ReadSingleOrDefault<Pais>();
+            if (Pais != null)
+            {
+                Pais.Ciudades = multi.Read<Ciudad>().ToList();
+            }
+            return Pais;
+        }
     }
     public Pais? DetallePorNombre(string nombrePais)
     {

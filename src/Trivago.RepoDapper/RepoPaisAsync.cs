@@ -24,9 +24,23 @@ public class RepoPaisAsync : RepoDapper, IRepoPaisAsync
 
     public async Task<Pais?> DetalleAsync(uint id)
     {
-        string sql = "Select * from Pais where idPais = @Id LIMIT 1";
-        var resultado = _conexion.QuerySingleOrDefaultAsync<Pais>(sql, new { Id = id});
-        return await resultado;
+        string sql = @" select * from Pais
+                        where idPais = @Id
+                        LIMIT 1;
+
+                        select * from Ciudad
+                        Where idPais = @Id;
+                        ";
+        using ( var multi = await _conexion.QueryMultipleAsync(sql, new { Id = id }))
+        {
+            var Pais = await multi.ReadSingleOrDefaultAsync<Pais>();
+            if (Pais != null)
+            {
+                var Ciudades = await multi.ReadAsync<Ciudad>();
+                Pais.Ciudades = Ciudades.ToList();
+            }
+            return Pais;
+        }
     }
     public async Task<Pais?> DetallePorNombreAsync(string nombrePais)
     {

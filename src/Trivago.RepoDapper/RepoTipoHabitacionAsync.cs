@@ -27,9 +27,23 @@ public class RepoTipoHabitacionAsync : RepoDapper, IRepoTipoHabitacionAsync
 
     public async Task<TipoHabitacion?> DetalleAsync(uint id)
     {
-        string sql = "Select * from TipoHabitacion where idTipo = @Id LIMIT 1";
-        var resultado = await _conexion.QuerySingleOrDefaultAsync<TipoHabitacion>(sql, new { Id = id});
-        return resultado;
+        string sql = @" select * from TipoHabitacion
+                        where idTipo = @Id
+                        LIMIT 1;
+
+                        select * from Habitacion
+                        Where idTipo = @Id;
+                        ";
+        using ( var multi = await _conexion.QueryMultipleAsync(sql, new { Id = id }))
+        {
+            var TipoHabitacion = await multi.ReadSingleOrDefaultAsync<TipoHabitacion>();
+            if (TipoHabitacion != null)
+            {
+                var Habitaciones = await multi.ReadAsync<Habitacion>();
+                TipoHabitacion.Habitaciones = Habitaciones.ToList();
+            }
+            return TipoHabitacion;
+        }
     }
 
     public async Task<List<TipoHabitacion>> ListarAsync()

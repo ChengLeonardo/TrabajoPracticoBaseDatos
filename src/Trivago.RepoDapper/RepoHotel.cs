@@ -37,9 +37,22 @@ public class RepoHotel : RepoDapper, IRepoHotel
 
     public Hotel? Detalle(uint id)
     {
-        string sql = "Select * from Hotel where idHotel = @Id LIMIT 1";
-        var resultado = _conexion.QuerySingleOrDefault<Hotel>(sql, new { Id = id});
-        return resultado;
+                        string sql = @" select * from Hotel
+                        where idHotel = @Id
+                        LIMIT 1;
+
+                        select * from Habitacion
+                        Where idHotel = @Id;
+                        ";
+        using ( var multi = _conexion.QueryMultiple(sql, new { Id = id }))
+        {
+            var hotel = multi.ReadSingleOrDefault<Hotel>();
+            if (hotel != null)
+            {
+                hotel.Habitaciones = multi.Read<Habitacion>().ToList();
+            }
+            return hotel;
+        }
     }
 
     public List<Hotel> Listar()

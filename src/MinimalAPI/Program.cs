@@ -41,8 +41,11 @@ app.MapGet("/pais/{id}", async (uint id, IRepoPaisAsync repo) =>
             ? Results.Ok(pais)
             : Results.NotFound());
 
-app.MapPost("/pais", async (Pais pais, IRepoPaisAsync repo) =>
+app.MapPost("/pais", async (string nombre, IRepoPaisAsync repo) =>
 {
+    Pais pais = new Pais{
+        Nombre = nombre
+    };
     await repo.AltaAsync(pais);
 
     return Results.Created($"/paisitems/{pais.idPais}", pais);
@@ -61,8 +64,12 @@ app.MapGet("/ciudad/{id}", async (uint id, IRepoCiudadAsync repo) =>
             ? Results.Ok(ciudad)
             : Results.NotFound());
 
-app.MapPost("/ciudad", async (Ciudad ciudad, IRepoCiudadAsync repo) =>
+app.MapPost("/ciudad", async (string nombre, uint idPais, IRepoCiudadAsync repo) =>
 {
+    Ciudad ciudad = new Ciudad{
+        idPais = idPais,
+        nombre = nombre
+    };
     await repo.AltaAsync(ciudad);
 
     return Results.Created($"/ciudaditems/{ciudad.idPais}", ciudad);

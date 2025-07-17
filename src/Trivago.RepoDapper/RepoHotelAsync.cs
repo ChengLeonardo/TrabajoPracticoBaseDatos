@@ -38,9 +38,23 @@ public class RepoHotelAsync : RepoDapper, IRepoHotelAsync
 
     public async Task<Hotel?> DetalleAsync(uint id)
     {
-        string sql = "Select * from Hotel where idHotel = @Id LIMIT 1";
-        var resultado = await _conexion.QuerySingleOrDefaultAsync<Hotel>(sql, new { Id = id});
-        return resultado;
+                        string sql = @" select * from Hotel
+                        where idHotel = @Id
+                        LIMIT 1;
+
+                        select * from Habitacion
+                        Where idHotel = @Id;
+                        ";
+        using ( var multi = await  _conexion.QueryMultipleAsync(sql, new { Id = id }))
+        {
+            var hotel = await  multi.ReadSingleOrDefaultAsync<Hotel>();
+            if (hotel != null)
+            {
+                var Habitaciones = await  multi.ReadAsync<Habitacion>();
+                hotel.Habitaciones = Habitaciones.ToList();
+            }
+            return hotel;
+        }
     }
 
     public async Task<List<Hotel>> ListarAsync()

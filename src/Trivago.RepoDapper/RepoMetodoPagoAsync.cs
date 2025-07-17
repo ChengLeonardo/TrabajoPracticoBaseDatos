@@ -1,4 +1,5 @@
 using System.Data;
+using System.Resources;
 using System.Threading.Tasks;
 using Trivago.Core.Persistencia;
 using Trivago.Core.Ubicacion;
@@ -27,9 +28,23 @@ public class RepoMetodoPagoAsync : RepoDapper, IRepoMetodoPagoAsync
 
     public async Task<MetodoPago?> DetalleAsync(uint id)
     {
-        string sql = "Select * from MetodoPago where idMetodoPago = @Id LIMIT 1";
-        var resultado = await _conexion.QuerySingleOrDefaultAsync<MetodoPago>(sql, new { Id = id});
-        return resultado;
+        string sql = @" select * from MetodoPago
+                        where idMetodoPago = @Id
+                        LIMIT 1;
+
+                        select * from Reserva
+                        Where idMetododePago = @Id;
+                        ";
+        using ( var multi = await _conexion.QueryMultipleAsync(sql, new { Id = id }))
+        {
+            var MetodoPago = await multi.ReadSingleOrDefaultAsync<MetodoPago>();
+            if (MetodoPago != null)
+            {
+                var Reservas = await multi.ReadAsync<Reserva>();
+                MetodoPago.Reservas = Reservas.ToList();
+            }
+            return MetodoPago;
+        }
     }
 
     public async Task<List<MetodoPago>> ListarAsync()

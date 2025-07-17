@@ -29,9 +29,23 @@ public class RepoUsuarioAsync : RepoDapper, IRepoUsuarioAsync
     }
     public async Task<Usuario?> DetalleAsync(uint id)
     {
-        string sql = "Select * from Usuario where idUsuario = @Id LIMIT 1";
-        var resultado = await _conexion.QuerySingleOrDefaultAsync<Usuario>(sql, new { Id = id});
-        return resultado;
+        string sql = @" select * from Usuario
+                        where idUsuario = @Id
+                        LIMIT 1;
+
+                        select * from Reserva
+                        Where idUsuario = @Id;
+                        ";
+        using ( var multi = await _conexion.QueryMultipleAsync(sql, new { Id = id }))
+        {
+            var Usuario = await multi.ReadSingleOrDefaultAsync<Usuario>();
+            if (Usuario != null)
+            {
+                var Reservas = await multi.ReadAsync<Reserva>();
+                Usuario.Reservas = Reservas.ToList();
+            }
+            return Usuario;
+        }
     }
 
     public async Task<List<Usuario>> ListarAsync()

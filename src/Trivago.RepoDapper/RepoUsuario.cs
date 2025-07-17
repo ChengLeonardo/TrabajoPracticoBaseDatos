@@ -29,9 +29,22 @@ public class RepoUsuario : RepoDapper, IRepoUsuario
     }
     public Usuario? Detalle(uint id)
     {
-        string sql = "Select * from Usuario where idUsuario = @Id LIMIT 1";
-        var resultado = _conexion.QuerySingleOrDefault<Usuario>(sql, new { Id = id});
-        return resultado;
+                string sql = @" select * from Usuario
+                        where idUsuario = @Id
+                        LIMIT 1;
+
+                        select * from Reserva
+                        Where idUsuario = @Id;
+                        ";
+        using ( var multi = _conexion.QueryMultiple(sql, new { Id = id }))
+        {
+            var Usuario = multi.ReadSingleOrDefault<Usuario>();
+            if (Usuario != null)
+            {
+                Usuario.Reservas = multi.Read<Reserva>().ToList();
+            }
+            return Usuario;
+        }
     }
 
     public List<Usuario> Listar()

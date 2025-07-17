@@ -26,9 +26,22 @@ public class RepoTipoHabitacion : RepoDapper, IRepoTipoHabitacion
 
     public TipoHabitacion? Detalle(uint id)
     {
-        string sql = "Select * from TipoHabitacion where idTipo = @Id LIMIT 1";
-        var resultado = _conexion.QuerySingleOrDefault<TipoHabitacion>(sql, new { Id = id});
-        return resultado;
+        string sql = @" select * from TipoHabitacion
+                        where idTipo = @Id
+                        LIMIT 1;
+
+                        select * from Habitacion
+                        Where idTipo = @Id;
+                        ";
+        using ( var multi = _conexion.QueryMultiple(sql, new { Id = id }))
+        {
+            var TipoHabitacion = multi.ReadSingleOrDefault<TipoHabitacion>();
+            if (TipoHabitacion != null)
+            {
+                TipoHabitacion.Habitaciones = multi.Read<Habitacion>().ToList();
+            }
+            return TipoHabitacion;
+        }
     }
 
     public List<TipoHabitacion> Listar()

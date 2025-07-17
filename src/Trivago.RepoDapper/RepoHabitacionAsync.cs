@@ -31,9 +31,28 @@ public class RepoHabitacionAsync : RepoDapper, IRepoHabitacionAsync
 
     public async Task<Habitacion?> DetalleAsync(uint id)
     {
-        string sql = "Select * from Habitacion where idHabitacion = @Id LIMIT 1";
-        var resultado = await _conexion.QuerySingleOrDefaultAsync<Habitacion>(sql, new { Id = id});
-        return resultado;
+                string sql = @" select * from Habitacion
+                        where idHabitacion = @Id
+                        LIMIT 1;
+
+                        select * from Comentario
+                        Where idHabitacion = @Id;
+
+                        select * from Reserva
+                        where idHabitacion = @Id;
+                        ";
+        using ( var multi = await _conexion.QueryMultipleAsync(sql, new { Id = id }))
+        {
+            var habitacion = await multi.ReadSingleOrDefaultAsync<Habitacion>();
+            if (habitacion != null)
+            {
+                var Comentarios = await multi.ReadAsync<Comentario>();
+                var Reservas = await  multi.ReadAsync<Reserva>();
+                habitacion.Comentarios = Comentarios.ToList();
+                habitacion.Reservas = Reservas.ToList();
+            }
+            return habitacion;
+        }
     }
 
     public async Task<List<Habitacion>> ListarAsync()
