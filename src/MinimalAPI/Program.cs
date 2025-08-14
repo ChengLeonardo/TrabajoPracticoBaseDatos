@@ -5,6 +5,7 @@ using Trivago.RepoDapper;
 using Trivago.Core;
 using Trivago.Core.Persistencia;
 using Trivago.Core.Ubicacion;
+using DTOs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,47 +33,47 @@ if (app.Environment.IsDevelopment())
 app.MapGet("/pais", async (IRepoPaisAsync repo) =>
     await repo.ListarAsync()
         is List<Pais> paises
-            ? Results.Ok(paises)
+            ? Results.Ok(paises.Select(pais => new PaisDTO(pais.idPais, pais.Nombre)))
             : Results.NotFound());
 
 app.MapGet("/pais/{id}", async (uint id, IRepoPaisAsync repo) =>
     await repo.DetalleAsync(id)
         is Pais pais
-            ? Results.Ok(pais)
+            ? Results.Ok(new PaisDetalleDTO(pais.idPais, pais.Nombre, pais.Ciudades.Select(ciudad => new CiudadDTO(ciudad.idCiudad, ciudad.nombre)).ToList()))
             : Results.NotFound());
 
-app.MapPost("/pais", async (string nombre, IRepoPaisAsync repo) =>
+app.MapPost("/pais", async (PaisAltaDTO pais, IRepoPaisAsync repo) =>
 {
-    Pais pais = new Pais{
-        Nombre = nombre
+    Pais paisAlta = new Pais{
+        Nombre = pais.Nombre
     };
-    await repo.AltaAsync(pais);
+    await repo.AltaAsync(paisAlta);
 
-    return Results.Created($"/paisitems/{pais.idPais}", pais);
+    return Results.Created($"/paisitems/{paisAlta.idPais}", pais);
 });
 
 
 app.MapGet("/ciudad", async (IRepoCiudadAsync repo) =>
     await repo.ListarAsync()
         is List<Ciudad> ciudades
-            ? Results.Ok(ciudades)
+            ? Results.Ok(ciudades.Select(ciudad => new CiudadDTO(ciudad.idCiudad, ciudad.nombre)))
             : Results.NotFound());
 
 app.MapGet("/ciudad/{id}", async (uint id, IRepoCiudadAsync repo) =>
     await repo.DetalleAsync(id)
         is Ciudad ciudad
-            ? Results.Ok(ciudad)
+            ? Results.Ok(new CiudadDetalleDTO(ciudad.idCiudad, ciudad.nombre, ciudad.Hoteles.Select(hotel => new HotelDTO(hotel.idHotel, hotel.Nombre, hotel.Direccion, hotel.Telefono, hotel.URL)).ToList()))
             : Results.NotFound());
 
-app.MapPost("/ciudad", async (string nombre, uint idPais, IRepoCiudadAsync repo) =>
+app.MapPost("/ciudad", async (CiudadAltaDTO ciudad, IRepoCiudadAsync repo) =>
 {
-    Ciudad ciudad = new Ciudad{
-        idPais = idPais,
-        nombre = nombre
+    Ciudad ciudadAlta = new Ciudad{
+        idPais = ciudad.idPais,
+        nombre = ciudad.Nombre
     };
-    await repo.AltaAsync(ciudad);
+    await repo.AltaAsync(ciudadAlta);
 
-    return Results.Created($"/ciudaditems/{ciudad.idPais}", ciudad);
+    return Results.Created($"/ciudaditems/{ciudadAlta.idCiudad}", ciudad);
 });
 
 app.Run();
