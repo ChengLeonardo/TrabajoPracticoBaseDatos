@@ -76,4 +76,38 @@ app.MapPost("/ciudad", async (CiudadAltaDTO ciudad, IRepoCiudadAsync repo) =>
     return Results.Created($"/ciudaditems/{ciudadAlta.idCiudad}", ciudad);
 });
 
+
+
+app.MapGet("/habitacion", async (IRepoHabitacionAsync repo) =>
+    await repo.ListarAsync()
+        is List<Habitacion> habitaciones
+            ? Results.Ok(habitaciones.Select(Habitacion => new HabitacionDTO(Habitacion.idHabitacion, Habitacion.PrecioPorNoche)))
+            : Results.NotFound());
+
+app.MapGet("/habitacion/{id}", async (uint id, IRepoHabitacionAsync repo) =>
+    await repo.DetalleAsync(id)
+        is Habitacion habitacion
+            ? Results.Ok(new HabitacionDetalleDTO(habitacion.idHabitacion, habitacion.PrecioPorNoche, habitacion.Comentarios.Select(comentario => new ComentarioDTO(comentario.idComentario, comentario.Fecha, comentario.comentario, comentario.Calificacion)).ToList(), habitacion.Reservas.Select(reserva => new ReservaDTO(reserva.idReserva, reserva.Entrada, reserva.Salida, reserva.Precio, reserva.Telefono)).ToList()))
+            : Results.NotFound());
+
+app.MapPost("/habitacion", async (HabitacionAltaDTO habitacion, IRepoHabitacionAsync repo) =>
+{
+    Habitacion habitacionAlta = new Habitacion
+    {
+        hotel = new Hotel
+        {
+            idHotel = habitacion.idHotel
+        },
+        tipoHabitacion = new TipoHabitacion
+        {
+            idTipo = habitacion.idTipo
+        },
+        PrecioPorNoche = habitacion.PrecioPorNoche
+    };
+
+    await repo.AltaAsync(habitacionAlta);
+
+    return Results.Created($"/habitacionitems/{habitacionAlta.idHabitacion}", habitacion);
+});
+
 app.Run();
