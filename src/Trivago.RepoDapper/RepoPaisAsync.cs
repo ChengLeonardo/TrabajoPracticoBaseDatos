@@ -1,13 +1,14 @@
+using System.Threading.Tasks;
 using Microsoft.VisualBasic;
 
 namespace Trivago.RepoDapper;
-public class RepoPais : RepoDapper, IRepoPais
+public class RepoPaisAsync : RepoDapper, IRepoPaisAsync
 {
-    public RepoPais(IDbConnection conexion) : base(conexion)
+    public RepoPaisAsync(IDbConnection conexion) : base(conexion)
     {
     }
 
-    public uint Alta(Pais pais)
+    public async Task<uint> AltaAsync(Pais pais)
     {
         string storedProcedure = "insert_pais";
 
@@ -15,13 +16,13 @@ public class RepoPais : RepoDapper, IRepoPais
         parametros.Add("p_Nombre", pais.Nombre);
         parametros.Add("p_idPais", direction: ParameterDirection.Output);
                
-        _conexion.Execute(storedProcedure, parametros);
+        await _conexion.ExecuteAsync(storedProcedure, parametros);
 
         pais.idPais = parametros.Get<uint>("p_idPais");
         return pais.idPais;
     }
 
-    public Pais? Detalle(uint id)
+    public async Task<Pais?> DetalleAsync(uint id)
     {
         string sql = @" select * from Pais
                         where idPais = @Id
@@ -30,27 +31,28 @@ public class RepoPais : RepoDapper, IRepoPais
                         select * from Ciudad
                         Where idPais = @Id;
                         ";
-        using ( var multi = _conexion.QueryMultiple(sql, new { Id = id }))
+        using ( var multi = await _conexion.QueryMultipleAsync(sql, new { Id = id }))
         {
-            var Pais = multi.ReadSingleOrDefault<Pais>();
+            var Pais = await multi.ReadSingleOrDefaultAsync<Pais>();
             if (Pais != null)
             {
-                Pais.Ciudades = multi.Read<Ciudad>().ToList();
+                var Ciudades = await multi.ReadAsync<Ciudad>();
+                Pais.Ciudades = Ciudades.ToList();
             }
             return Pais;
         }
     }
-    public Pais? DetallePorNombre(string nombrePais)
+    public async Task<Pais?> DetallePorNombreAsync(string nombrePais)
     {
         string sql = "Select * from Pais where Nombre = @Nombre Limit 1";
-        var resultado = _conexion.QuerySingleOrDefault<Pais>(sql, new {Nombre = nombrePais});
+        var resultado = await _conexion.QuerySingleOrDefaultAsync<Pais>(sql, new {Nombre = nombrePais});
         return resultado;
     }
 
-    public List<Pais> Listar()
+    public async Task<List<Pais>> ListarAsync()
     {
         string sql = "Select * from Pais";
-        var resultado = _conexion.Query<Pais>(sql).ToList();
-        return resultado;
+        var resultado = await _conexion.QueryAsync<Pais>(sql);
+        return resultado.ToList();
     }
 }

@@ -4,4 +4,5 @@ public class MetodoPago
 {
     public uint idMetodoPago { get; set; }
     public string TipoMedioPago { get; set; }
+    public List<Reserva> Reservas { get; set; }
 }

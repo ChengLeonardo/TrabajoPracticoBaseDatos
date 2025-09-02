@@ -10,7 +10,7 @@ public class RepoCiudad : RepoDapper, IRepoCiudad
         string storedProcedure = "insert_ciudad";
 
         var parametros = new DynamicParameters();
-        parametros.Add("p_nombre", ciudad.Nombre);
+        parametros.Add("p_nombre", ciudad.nombre);
         parametros.Add("p_idPais", ciudad.idPais);
         parametros.Add("p_idCiudad", direction: ParameterDirection.Output);
         _conexion.Execute(storedProcedure, parametros);
@@ -21,9 +21,22 @@ public class RepoCiudad : RepoDapper, IRepoCiudad
 
     public Ciudad? Detalle(uint id)
     {
-        string sql = "Select * from Ciudad where idCiudad = @Id LIMIT 1";
-        var resultado = _conexion.QuerySingleOrDefault<Ciudad>(sql, new { Id = id});
-        return resultado;
+        string sql = @" select * from Ciudad
+                        where idCiudad = @Id
+                        LIMIT 1;
+
+                        select * from Hotel
+                        Where idCiudad = @Id;
+                        ";
+        using (var multi = _conexion.QueryMultiple(sql, new { Id = id }))
+        {
+            var ciudad = multi.ReadSingleOrDefault<Ciudad>();
+            if (ciudad != null)
+            {
+                ciudad.Hoteles = multi.Read<Hotel>().ToList();
+            }
+            return ciudad;
+        }
     }
 
     public List<Ciudad> Listar()

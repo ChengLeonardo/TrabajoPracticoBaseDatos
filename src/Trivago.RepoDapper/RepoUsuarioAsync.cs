@@ -1,17 +1,17 @@
 using System.Data;
-using System.Net.Mail;
+using System.Threading.Tasks;
 using Trivago.Core.Persistencia;
 using Trivago.Core.Ubicacion;
 
 namespace Trivago.RepoDapper;
 
-public class RepoUsuario : RepoDapper, IRepoUsuario
+public class RepoUsuarioAsync : RepoDapper, IRepoUsuarioAsync
 {
-    public RepoUsuario(IDbConnection conexion) : base(conexion)
+    public RepoUsuarioAsync(IDbConnection conexion) : base(conexion)
     {
     }
 
-    public uint Alta(Usuario usuario)
+    public async Task<uint> AltaAsync(Usuario usuario)
     {
         string storedProcedure = "insert_usuario";
 
@@ -22,47 +22,48 @@ public class RepoUsuario : RepoDapper, IRepoUsuario
         parametros.Add("p_Contrasena", usuario.Contrasena);
         parametros.Add("p_idUsuario", direction: ParameterDirection.Output);
                
-        _conexion.Execute(storedProcedure, parametros);
+        await _conexion.ExecuteAsync(storedProcedure, parametros);
 
         usuario.idUsuario = parametros.Get<uint>("p_idUsuario");
         return usuario.idUsuario;
     }
-    public Usuario? Detalle(uint id)
+    public async Task<Usuario?> DetalleAsync(uint id)
     {
-                string sql = @" select * from Usuario
+        string sql = @" select * from Usuario
                         where idUsuario = @Id
                         LIMIT 1;
 
                         select * from Reserva
                         Where idUsuario = @Id;
                         ";
-        using ( var multi = _conexion.QueryMultiple(sql, new { Id = id }))
+        using ( var multi = await _conexion.QueryMultipleAsync(sql, new { Id = id }))
         {
-            var Usuario = multi.ReadSingleOrDefault<Usuario>();
+            var Usuario = await multi.ReadSingleOrDefaultAsync<Usuario>();
             if (Usuario != null)
             {
-                Usuario.Reservas = multi.Read<Reserva>().ToList();
+                var Reservas = await multi.ReadAsync<Reserva>();
+                Usuario.Reservas = Reservas.ToList();
             }
             return Usuario;
         }
     }
 
-    public List<Usuario> Listar()
+    public async Task<List<Usuario>> ListarAsync()
     {
         string sql = "Select * from Usuario";
-        var resultado = _conexion.Query<Usuario>(sql).ToList();
-        return resultado;
+        var resultado = await _conexion.QueryAsync<Usuario>(sql);
+        return resultado.ToList();
     }
 
-    public Usuario? UsuarioPorPass(string email, string pass)
+    public async Task<Usuario?> UsuarioPorPassAsync(string email, string pass)
     {
         Usuario? resultado = null;
         string sql = "Select verificacion_usuario(@mail, @Contrasena)";
-        var correcto = _conexion.QuerySingle<int>(sql, new { mail = email, Contrasena = pass});
+        var correcto = await _conexion.QuerySingleAsync<int>(sql, new { mail = email, Contrasena = pass});
         if(correcto == 1)
         {
             sql = "Select * from Usuario where Mail = @mail";
-            resultado = _conexion.QuerySingle<Usuario>(sql, new { mail = email});
+            resultado = await _conexion.QuerySingleAsync<Usuario>(sql, new { mail = email});
         }
         return resultado;
     }

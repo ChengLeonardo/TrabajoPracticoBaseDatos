@@ -9,4 +9,5 @@ public class Usuario
     public string Mail { get; set; }
     public string Contrasena { get; set; }
     
+    public List<Reserva> Reservas { get; set; }
 }

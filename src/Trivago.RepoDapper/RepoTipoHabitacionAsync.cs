@@ -1,16 +1,17 @@
 using System.Data;
+using System.Threading.Tasks;
 using Trivago.Core.Persistencia;
 using Trivago.Core.Ubicacion;
 
 namespace Trivago.RepoDapper;
 
-public class RepoTipoHabitacion : RepoDapper, IRepoTipoHabitacion
+public class RepoTipoHabitacionAsync : RepoDapper, IRepoTipoHabitacionAsync
 {
-    public RepoTipoHabitacion(IDbConnection conexion) : base(conexion)
+    public RepoTipoHabitacionAsync(IDbConnection conexion) : base(conexion)
     {
     }
 
-    public uint Alta(TipoHabitacion tipoHabitacion)
+    public async Task<uint> AltaAsync(TipoHabitacion tipoHabitacion)
     {
         string storedProcedure = "insert_tipo_habitacion";
 
@@ -18,13 +19,13 @@ public class RepoTipoHabitacion : RepoDapper, IRepoTipoHabitacion
         parametros.Add("p_Nombre", tipoHabitacion.Nombre);
         parametros.Add("p_idTipo", direction: ParameterDirection.Output);
                
-        _conexion.Execute(storedProcedure, parametros, commandType: CommandType.StoredProcedure);
+        await _conexion.ExecuteAsync(storedProcedure, parametros);
 
         tipoHabitacion.idTipo= parametros.Get<uint>("p_idTipo");
         return tipoHabitacion.idTipo;
     }
 
-    public TipoHabitacion? Detalle(uint id)
+    public async Task<TipoHabitacion?> DetalleAsync(uint id)
     {
         string sql = @" select * from TipoHabitacion
                         where idTipo = @Id
@@ -33,21 +34,22 @@ public class RepoTipoHabitacion : RepoDapper, IRepoTipoHabitacion
                         select * from Habitacion
                         Where idTipo = @Id;
                         ";
-        using ( var multi = _conexion.QueryMultiple(sql, new { Id = id }))
+        using ( var multi = await _conexion.QueryMultipleAsync(sql, new { Id = id }))
         {
-            var TipoHabitacion = multi.ReadSingleOrDefault<TipoHabitacion>();
+            var TipoHabitacion = await multi.ReadSingleOrDefaultAsync<TipoHabitacion>();
             if (TipoHabitacion != null)
             {
-                TipoHabitacion.Habitaciones = multi.Read<Habitacion>().ToList();
+                var Habitaciones = await multi.ReadAsync<Habitacion>();
+                TipoHabitacion.Habitaciones = Habitaciones.ToList();
             }
             return TipoHabitacion;
         }
     }
 
-    public List<TipoHabitacion> Listar()
+    public async Task<List<TipoHabitacion>> ListarAsync()
     {
         string sql = "Select * from TipoHabitacion";
-        var resultado = _conexion.Query<TipoHabitacion>(sql).ToList();
-        return resultado;
+        var resultado = await _conexion.QueryAsync<TipoHabitacion>(sql);
+        return resultado.ToList();
     }
 }

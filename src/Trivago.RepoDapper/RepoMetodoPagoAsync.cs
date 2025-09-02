@@ -1,16 +1,18 @@
 using System.Data;
+using System.Resources;
+using System.Threading.Tasks;
 using Trivago.Core.Persistencia;
 using Trivago.Core.Ubicacion;
 
 namespace Trivago.RepoDapper;
 
-public class RepoMetodoPago : RepoDapper, IRepoMetodoPago
+public class RepoMetodoPagoAsync : RepoDapper, IRepoMetodoPagoAsync
 {
-    public RepoMetodoPago(IDbConnection conexion) : base(conexion)
+    public RepoMetodoPagoAsync(IDbConnection conexion) : base(conexion)
     {
     }
 
-    public uint Alta(MetodoPago metodoPago)
+    public async Task<uint> AltaAsync(MetodoPago metodoPago)
     {
         string storedProcedure = "insert_metodo_pago";
 
@@ -18,13 +20,13 @@ public class RepoMetodoPago : RepoDapper, IRepoMetodoPago
         parametros.Add("p_TipoMedioPago", metodoPago.TipoMedioPago);
         parametros.Add("p_idMetodoPago", direction: ParameterDirection.Output);
                
-        _conexion.Execute(storedProcedure, parametros);
+        await _conexion.ExecuteAsync(storedProcedure, parametros);
 
         metodoPago.idMetodoPago = parametros.Get<uint>("p_idMetodoPago");
         return metodoPago.idMetodoPago;
     }
 
-    public MetodoPago? Detalle(uint id)
+    public async Task<MetodoPago?> DetalleAsync(uint id)
     {
         string sql = @" select * from MetodoPago
                         where idMetodoPago = @Id
@@ -33,21 +35,22 @@ public class RepoMetodoPago : RepoDapper, IRepoMetodoPago
                         select * from Reserva
                         Where idMetododePago = @Id;
                         ";
-        using ( var multi = _conexion.QueryMultiple(sql, new { Id = id }))
+        using ( var multi = await _conexion.QueryMultipleAsync(sql, new { Id = id }))
         {
-            var MetodoPago = multi.ReadSingleOrDefault<MetodoPago>();
+            var MetodoPago = await multi.ReadSingleOrDefaultAsync<MetodoPago>();
             if (MetodoPago != null)
             {
-                MetodoPago.Reservas = multi.Read<Reserva>().ToList();
+                var Reservas = await multi.ReadAsync<Reserva>();
+                MetodoPago.Reservas = Reservas.ToList();
             }
             return MetodoPago;
         }
     }
 
-    public List<MetodoPago> Listar()
+    public async Task<List<MetodoPago>> ListarAsync()
     {
         string sql = "Select * from MetodoPago";
-        var resultado = _conexion.Query<MetodoPago>(sql).ToList();
-        return resultado;
+        var resultado = await _conexion.QueryAsync<MetodoPago>(sql);
+        return resultado.ToList();
     }
 }

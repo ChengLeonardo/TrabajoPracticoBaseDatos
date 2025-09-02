@@ -1,22 +1,23 @@
 using System.Data;
+using System.Threading.Tasks;
 using Trivago.Core.Persistencia;
 using Trivago.Core.Ubicacion;
 
 namespace Trivago.RepoDapper;
 
-public class RepoHotel : RepoDapper, IRepoHotel
+public class RepoHotelAsync : RepoDapper, IRepoHotelAsync
 {
-    public RepoHotel(IDbConnection conexion) : base(conexion)
+    public RepoHotelAsync(IDbConnection conexion) : base(conexion)
     {
     }
 
-    public List<Hotel> InformarHotelesPorIdCiudad(int idCiudad)
+    public async Task<List<Hotel>> InformarHotelesPorIdCiudadAsync(int idCiudad)
     {
         string sql = "Select * from Hotel where idCiudad = @Id";
-        var resultado = _conexion.Query<Hotel>(sql, new { Id = idCiudad}).ToList();
-        return resultado;
+        var resultado = await  _conexion.QueryAsync <Hotel>(sql, new { Id = idCiudad});
+        return resultado.ToList();
     }
-    public uint Alta(Hotel hotel)
+    public async Task<uint> AltaAsync(Hotel hotel)
     {
         string storedProcedure = "insert_hotel";
 
@@ -28,14 +29,14 @@ public class RepoHotel : RepoDapper, IRepoHotel
         parametros.Add("p_URL", hotel.URL);
         parametros.Add("p_idHotel",direction: ParameterDirection.Output);
                
-        _conexion.Execute(storedProcedure, parametros);
+        await _conexion.ExecuteAsync(storedProcedure, parametros);
 
         hotel.idHotel = parametros.Get<uint>("p_idHotel");
         return hotel.idHotel;
     }
 
 
-    public Hotel? Detalle(uint id)
+    public async Task<Hotel?> DetalleAsync(uint id)
     {
                         string sql = @" select * from Hotel
                         where idHotel = @Id
@@ -44,21 +45,23 @@ public class RepoHotel : RepoDapper, IRepoHotel
                         select * from Habitacion
                         Where idHotel = @Id;
                         ";
-        using ( var multi = _conexion.QueryMultiple(sql, new { Id = id }))
+        using ( var multi = await  _conexion.QueryMultipleAsync(sql, new { Id = id }))
         {
-            var hotel = multi.ReadSingleOrDefault<Hotel>();
+            var hotel = await  multi.ReadSingleOrDefaultAsync<Hotel>();
             if (hotel != null)
             {
-                hotel.Habitaciones = multi.Read<Habitacion>().ToList();
+                var Habitaciones = await  multi.ReadAsync<Habitacion>();
+                hotel.Habitaciones = Habitaciones.ToList();
             }
             return hotel;
         }
     }
 
-    public List<Hotel> Listar()
+    public async Task<List<Hotel>> ListarAsync()
     {
         string sql = "Select * from Hotel";
-        var resultado = _conexion.Query<Hotel>(sql).ToList();
-        return resultado;
+        var resultado = await _conexion.QueryAsync<Hotel>(sql);
+        return resultado.ToList();
     }
+
 }

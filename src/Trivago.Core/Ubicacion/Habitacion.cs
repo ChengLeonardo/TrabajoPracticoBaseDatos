@@ -6,5 +6,6 @@ public class Habitacion
     public Hotel hotel { get; set; }
     public TipoHabitacion tipoHabitacion  { get; set; }
     public List<Comentario> Comentarios { get; set; }
+    public List<Reserva> Reservas { get; set; }
     public decimal PrecioPorNoche { get; set; }
 }
