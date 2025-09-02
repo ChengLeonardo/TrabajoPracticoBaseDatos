@@ -1,7 +1,28 @@
+using System.Data;
+using MySqlConnector;
+using Trivago.Core;
+using Trivago.Core.Persistencia;
+using Trivago.RepoDapper;
 var builder = WebApplication.CreateBuilder(args);
 
+
+
+var connectionString = builder.Configuration.GetConnectionString("MySQL");
+
+builder.Services.AddScoped<IDbConnection>(sp => new MySqlConnection(connectionString));
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddScoped<IRepoPaisAsync, RepoPaisAsync>();
+builder.Services.AddScoped<IRepoCiudadAsync, RepoCiudadAsync>();
+builder.Services.AddScoped<IRepoHotelAsync, RepoHotelAsync>();
+builder.Services.AddScoped<IRepoHabitacionAsync, RepoHabitacionAsync>();
+builder.Services.AddScoped<IRepoReservaAsync, RepoReservaAsync>();
+builder.Services.AddScoped<IRepoUsuarioAsync, RepoUsuarioAsync>();
+builder.Services.AddScoped<IRepoComentarioAsync, RepoComentarioAsync>();
+builder.Services.AddScoped<IRepoMetodoPagoAsync, RepoMetodoPagoAsync>();
+builder.Services.AddScoped<IRepoReservaAsync, RepoReservaAsync>();
+
 
 var app = builder.Build();
 

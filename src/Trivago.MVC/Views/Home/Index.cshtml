@@ -1,8 +1,18 @@
-﻿@{
+﻿@using System.ComponentModel.DataAnnotations.Schema
+@using Microsoft.AspNetCore.Mvc.ModelBinding
+@using Trivago.Core.Ubicacion;
+@model IEnumerable<Pais>
+@using Trivago.MVC;
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    @foreach (var pais in Model)
+    {
+        <h2>@pais.Nombre</h2>
+    }
+    
+
 </div>

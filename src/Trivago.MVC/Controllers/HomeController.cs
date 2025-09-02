@@ -1,21 +1,27 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Trivago.MVC.Models;
-
+using Trivago.RepoDapper;
+using Trivago.Core;
+using Trivago.Core.Persistencia;
+using Trivago.Core.Ubicacion;
+using System.Threading.Tasks;
 namespace Trivago.MVC.Controllers;
 
 public class HomeController : Controller
 {
+    private readonly IRepoPaisAsync _repoPais;
     private readonly ILogger<HomeController> _logger;
-
-    public HomeController(ILogger<HomeController> logger)
+    public HomeController(ILogger<HomeController> logger, IRepoPaisAsync repoPais)
     {
         _logger = logger;
+        _repoPais = repoPais;
     }
 
-    public IActionResult Index()
+    public async Task<IActionResult> Index()
     {
-        return View();
+        var paises = await _repoPais.ListarAsync();
+        return View(paises);
     }
 
     public IActionResult Privacy()

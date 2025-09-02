@@ -3,6 +3,11 @@
   <ItemGroup>
     <ProjectReference Include="..\Trivago.Core\Trivago.Core.csproj" />
     <ProjectReference Include="..\Trivago.RepoDapper\Trivago.RepoDapper.csproj" />
+    <ProjectReference Include="..\MinimalAPI\MinimalAPI.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MySqlConnector" Version="2.4.0" />
   </ItemGroup>
 
   <PropertyGroup>
