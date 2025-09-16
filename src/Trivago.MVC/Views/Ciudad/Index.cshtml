@@ -1,0 +1,15 @@
+@model Trivago.MVC.Models.CiudadViewModel;
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>@ViewData["Title"]</h1>
+@foreach(var ciudad in Model.ciudadGetViewModel.ciudades)
+{
+<div class="row">
+    <div class="col">
+        @ciudad.nombre
+    </div>
+</div>
+}
+<a asp-action="PostForm">Agregar ciudad</a>
