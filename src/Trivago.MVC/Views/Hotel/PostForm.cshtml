@@ -1,0 +1,21 @@
+
+@model Trivago.MVC.Models.HotelViewModel;
+@{
+    ViewData["Title"] = "PostForm";
+}
+
+<h1>@ViewData["Title"]</h1>
+<p>Agregar una hotel nueva</p>
+<form asp-action="PostForm" method="post">
+    <input asp-for="@Model.hotelPostViewModel.nombre" placeholder="Ingrese el nombre del hotel">
+    <input asp-for="@Model.hotelPostViewModel.Direccion" placeholder="Ingrese la direccion del hotel">
+    <input asp-for="@Model.hotelPostViewModel.Telefono" placeholder="Ingrese el numero telefono del hotel">
+    <input asp-for="@Model.hotelPostViewModel.URL" placeholder="Ingrese la URL del hotel">
+
+    <select asp-for="@Model.hotelPostViewModel.IdCiudadSeleccionado" asp-items="@Model.hotelPostViewModel.ciudades"></select>
+        <option disabled selected>--Elegir una ciudad--</option>
+    </select>
+    <input hidden asp-for"@Model.hotelGetViewModel.hoteles" value="@Model.hotelGetViewModel.hoteles.ToList()">
+    <button type="submit">Alta Hotel</button>
+</form>
+<a asp-action="Index">Mostrar Hoteles</a>

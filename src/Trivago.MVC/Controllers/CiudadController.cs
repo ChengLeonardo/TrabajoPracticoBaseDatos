@@ -65,6 +65,20 @@ namespace Trivago.MVC.Controllers
             return View("Index", ciudadViewModel);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Detalle(uint? id)
+        {
+            if (id == null)
+            {
+                return View(new Ciudad());
+            }
+            else
+            {
+                var ciudad = await _repoCiudadAsync.DetalleAsync(id.Value);
+                return View(ciudad);
+            }
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

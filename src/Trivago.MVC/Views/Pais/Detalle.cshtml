@@ -1,0 +1,11 @@
+@using Trivago.Core.Ubicacion
+@model Trivago.Core.Ubicacion.Pais
+
+<h1>@ViewData["Title"]</h1>
+
+<div>
+    <p>idPais: @Model.idPais</p>
+    <p>Nombre: @Model.Nombre</p>
+</div>
+<a asp-action="Index">Mostrar paises</a>
+<a asp-action="PostForm">Agregar pais</a>

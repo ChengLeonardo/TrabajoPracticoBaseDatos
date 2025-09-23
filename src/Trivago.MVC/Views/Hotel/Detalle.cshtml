@@ -1,0 +1,13 @@
+@using Trivago.Core.Ubicacion
+@model Trivago.Core.Ubicacion.Hotel
+
+<h1>@ViewData["Title"]</h1>
+
+<div>
+    <p>idCiudad: @Model.idCiudad</p>
+    <p>Nombre: @Model.Nombre</p>
+    <p>Telefono: @Model.Telefono</p>
+    <a>@Model.URL</a>
+</div>
+<a asp-action="Index">Mostrar hoteles</a>
+<a asp-action="PostForm">Agregar hotel</a>

@@ -1,7 +1,7 @@
 ﻿@using System.ComponentModel.DataAnnotations.Schema
 @using Microsoft.AspNetCore.Mvc.ModelBinding
 @using Trivago.Core.Ubicacion;
-@model IEnumerable<Pais>
+@model HomeViewModel
 @using Trivago.MVC;
 
 @{
@@ -9,11 +9,16 @@
 }
 
 <div class="text-center">
-    @foreach (var pais in Model)
-    {
-        <h2>@pais.Nombre</h2>
-    }
+<form asp-action="Index" method="post">
+    <input hidden asp-for="@Model.homePostViewModel.LugaresDato" value="@Model.homePostViewModel.LugaresDato">
+    <select asp-for="@Model.homePostViewModel.id"  asp-items="@Model.homePostViewModel.Lugares">
+        <option disabled selected>--Elegir un Lugar--</option>
+    </select>
+    <button type="submit">Buscar
+    </button>
+</form>
     
     <a asp-controller="Ciudad" asp-action="Index">Ver ciudades</a>
+    <a asp-controller="Pais" asp-action="Index">Ver paises</a>
 
 </div>
