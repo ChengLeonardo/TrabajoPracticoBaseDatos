@@ -56,6 +56,10 @@ namespace Trivago.MVC.Controllers
         [HttpPost]
         public async Task<IActionResult> PostForm(HotelViewModel hotelViewModel)
         {
+            if(hotelViewModel.hotelPostViewModel.IdCiudadSeleccionado == null)
+            {
+                Console.WriteLine("es nullo");
+            }
             Hotel hotel = new Hotel()
             {
                 idCiudad = hotelViewModel.hotelPostViewModel.IdCiudadSeleccionado.Value,

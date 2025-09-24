@@ -8,7 +8,7 @@
 <p>Agregar una ciudad nueva</p>
 <form asp-action="PostForm" method="post">
     <input asp-for="@Model.ciudadPostViewModel.nombre" placeholder="Ingrese el nombre de la ciudad">
-    <select asp-for="@Model.ciudadPostViewModel.IdPaisSeleccionado" asp-items="@Model.ciudadPostViewModel.paises"></select>
+    <select asp-for="@Model.ciudadPostViewModel.IdPaisSeleccionado" asp-items="@Model.ciudadPostViewModel.paises">
         <option disabled selected>--Elegir un pais--</option>
     </select>
     <input hidden asp-for"@Model.ciudadGetViewModel.ciudades" value="@Model.ciudadGetViewModel.ciudades">

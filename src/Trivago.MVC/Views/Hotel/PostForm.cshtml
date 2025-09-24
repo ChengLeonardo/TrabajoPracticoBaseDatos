@@ -12,7 +12,7 @@
     <input asp-for="@Model.hotelPostViewModel.Telefono" placeholder="Ingrese el numero telefono del hotel">
     <input asp-for="@Model.hotelPostViewModel.URL" placeholder="Ingrese la URL del hotel">
 
-    <select asp-for="@Model.hotelPostViewModel.IdCiudadSeleccionado" asp-items="@Model.hotelPostViewModel.ciudades"></select>
+    <select asp-for="@Model.hotelPostViewModel.IdCiudadSeleccionado" asp-items="@Model.hotelPostViewModel.ciudades">
         <option disabled selected>--Elegir una ciudad--</option>
     </select>
     <input hidden asp-for"@Model.hotelGetViewModel.hoteles" value="@Model.hotelGetViewModel.hoteles.ToList()">

@@ -9,8 +9,8 @@ namespace Trivago.MVC.Models
 {
     public class HotelViewModel
     {
-        internal HotelGetViewModel? hotelGetViewModel { get; set; } = new();
-        internal HotelPostViewModel? hotelPostViewModel { get; set; } = new();
+        public HotelGetViewModel? hotelGetViewModel { get; set; } = new();
+        public HotelPostViewModel? hotelPostViewModel { get; set; } = new();
     }
 
     public class HotelGetViewModel
@@ -19,9 +19,9 @@ namespace Trivago.MVC.Models
     }
     public class HotelPostViewModel
     {
-        internal string nombre { get; set; }
+        public string nombre { get; set; }
 
-        internal SelectList ciudades { get; set; } 
+        public SelectList ciudades { get; set; } 
 
         public uint? IdCiudadSeleccionado { get; set; }
         public string URL { get;  set; }
