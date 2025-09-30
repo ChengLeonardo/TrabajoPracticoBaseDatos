@@ -22,6 +22,33 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
+                        <li class="nav-item dropdown">
+                            <button class="btn dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                Pais
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu">
+                                <li><a class="nav-link text-dark" asp-area="" asp-controller="Pais" asp-action="Index">Index</a></li>
+                                <li><a class="nav-link text-dark" asp-area="" asp-controller="Pais" asp-action="PostForm">Alta</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <button class="btn  dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                Ciudad
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu">
+                                <li><a class="nav-link text-dark" asp-area="" asp-controller="Ciudad" asp-action="Index">Index</a></li>
+                                <li><a class="nav-link text-dark" asp-area="" asp-controller="Ciudad" asp-action="PostForm">Alta</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <button class="btn dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                Hotel
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu">
+                                <li><a class="nav-link text-dark" asp-area="" asp-controller="Hotel" asp-action="Index">Index</a></li>
+                                <li><a class="nav-link text-dark" asp-area="" asp-controller="Hotel" asp-action="PostForm">Alta</a></li>
+                            </ul>
+                        </li>
                     </ul>
                 </div>
             </div>

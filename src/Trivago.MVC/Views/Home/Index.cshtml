@@ -10,16 +10,32 @@
 
 <div class="text-center">
 <form asp-action="Index" method="post">
-    <input hidden asp-for="@Model.homePostViewModel.LugaresDato" value="@Model.homePostViewModel.LugaresDato">
+    <div class="d-flex justify-content-between border rounded ">
+
+    <input  hidden asp-for="@Model.homePostViewModel.LugaresDato" value="@Model.homePostViewModel.LugaresDato">
     <select asp-for="@Model.homePostViewModel.id"  asp-items="@Model.homePostViewModel.Lugares">
-        <option disabled selected>--Elegir un Lugar--</option>
     </select>
     <button type="submit">Buscar
     </button>
+    </div>
 </form>
-    
-    <a asp-controller="Ciudad" asp-action="Index">Ver ciudades</a>
-    <a asp-controller="Pais" asp-action="Index">Ver paises</a>
-    <a asp-controller="Hotel" asp-action="Index">Ver paises</a>
 
+<div class="row">
+<div class="col">
+    <img src="https://imgcy.trivago.com/hardcodedimages/homepage-landing/usp/SearchDesktop.svg">
+    <h3>
+    Buscá rápido
+    </h3>
+    <p>Buscá fácilmente entre millones de hoteles en segundos.</p>
+</div>
+<div class="col">
+    <img src="https://imgcy.trivago.com/hardcodedimages/homepage-landing/usp/CompareDesktop.svg">
+    <h3>Compará con confianza</h3>
+    <p>Compará precios de hoteles de más de 100 páginas a la vez.</p>
+</div>
+<div class="col">
+    <img src="https://imgcy.trivago.com/hardcodedimages/homepage-landing/usp/SaveDesktop.svg">
+    <h3>Ahorrá a lo grande</h3>
+    <p>Encontrá grandes ofertas en nuestras páginas asociadas.</p>
+</div>
 </div>

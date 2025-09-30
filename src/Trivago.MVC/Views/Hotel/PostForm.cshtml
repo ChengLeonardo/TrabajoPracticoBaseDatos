@@ -13,7 +13,6 @@
     <input asp-for="@Model.hotelPostViewModel.URL" placeholder="Ingrese la URL del hotel">
 
     <select asp-for="@Model.hotelPostViewModel.IdCiudadSeleccionado" asp-items="@Model.hotelPostViewModel.ciudades">
-        <option disabled selected>--Elegir una ciudad--</option>
     </select>
     <input hidden asp-for"@Model.hotelGetViewModel.hoteles" value="@Model.hotelGetViewModel.hoteles.ToList()">
     <button type="submit">Alta Hotel</button>

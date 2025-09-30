@@ -4,6 +4,7 @@
 }
 
 <h1>@ViewData["Title"]</h1>
+<a asp-action="PostForm">Agregar hotel</a>
 @foreach(var hotel in Model.hotelGetViewModel.hoteles)
 {
 <div class="row">
@@ -12,5 +13,4 @@
     </div>
 </div>
 }
-<a asp-action="PostForm">Agregar hotel</a>
 
