@@ -1,11 +1,13 @@
 @using Trivago.Core.Ubicacion
 @model Trivago.Core.Ubicacion.Ciudad
+@{
+    ViewData["Title"] = "Detalle";
+}
+
 
 <h1>@ViewData["Title"]</h1>
 
 <div>
-    <p>idCiudad: @Model.idCiudad</p>
-    <p>idPais: @Model.idPais</p>
     <p>Nombre: @Model.nombre</p>
 </div>
 <a asp-action="Index">Mostrar ciudades</a>
