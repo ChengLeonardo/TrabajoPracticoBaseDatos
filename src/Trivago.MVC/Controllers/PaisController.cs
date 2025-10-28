@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
@@ -13,13 +14,14 @@ using Trivago.RepoDapper;
 
 namespace Trivago.MVC.Controllers
 {
+    [Authorize]
     public class PaisController : Controller
     {
         private readonly IRepoPaisAsync _repoPaisAsync;
         private readonly IRepoCiudadAsync _repoCiudadAsync;
         private readonly ILogger<PaisController> _logger;
 
-        public PaisController(ILogger<PaisController> logger, IRepoPaisAsync repoPaisAsync, IRepoCiudadAsync  repoCiudadAsync)
+        public PaisController(ILogger<PaisController> logger, IRepoPaisAsync repoPaisAsync, IRepoCiudadAsync repoCiudadAsync)
         {
             _logger = logger;
             _repoCiudadAsync = repoCiudadAsync;
@@ -58,7 +60,7 @@ namespace Trivago.MVC.Controllers
                 Nombre = paisViewModel.paisPostViewModel.nombre
             };
             var id = await _repoPaisAsync.AltaAsync(pais);
-                        var paises = await _repoPaisAsync.ListarAsync();
+            var paises = await _repoPaisAsync.ListarAsync();
             paisViewModel.paisGetViewModel.Paises = paises;
             return View("Index", paisViewModel);
         }

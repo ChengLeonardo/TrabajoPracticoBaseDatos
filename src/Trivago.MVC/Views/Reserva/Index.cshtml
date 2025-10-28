@@ -1,0 +1,16 @@
+@model Trivago.MVC.Models.ReservaViewModel;
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>@ViewData["Title"]</h1>
+<a asp-action="PostForm">Agregar reserva</a>
+@foreach(var reserva in Model.reservaGetViewModel.Reservas)
+{
+<div class="row">
+    <div class="col">
+        <a asp-action="Detalle" asp-route-id="@reserva.idReserva">@reserva.idReserva</a>
+    </div>
+</div>
+}
+

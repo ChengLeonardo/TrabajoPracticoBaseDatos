@@ -12,6 +12,15 @@
     <p>Nombre: @Model.Nombre</p>
     <p>Telefono: @Model.Telefono</p>
     <a>@Model.URL</a>
+    <p>Habitaciones:</p>
+        @foreach(var habitacion in Model.Habitaciones)
+        {
+        <div class="row">
+            <div class="col">
+                <a asp-action="Detalle" asp-controller="Habitacion" asp-route-id="@habitacion.idHabitacion">@habitacion.tipoHabitacion</a>
+            </div>
+        </div>
+        }
 </div>
 <a asp-action="Index">Mostrar hoteles</a>
 <a asp-action="PostForm">Agregar hotel</a>

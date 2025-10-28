@@ -10,6 +10,15 @@
 <div>
     <p>idPais: @Model.idPais</p>
     <p>Nombre: @Model.Nombre</p>
+    <p>Ciudades:</p>
+        @foreach(var ciudad in Model.Ciudades)
+        {
+        <div class="row">
+            <div class="col">
+                <a asp-action="Detalle" asp-controller="Ciudad" asp-route-id="@ciudad.idCiudad">@ciudad.nombre</a>
+            </div>
+        </div>
+        }
 </div>
 <a asp-action="Index">Mostrar paises</a>
 <a asp-action="PostForm">Agregar pais</a>

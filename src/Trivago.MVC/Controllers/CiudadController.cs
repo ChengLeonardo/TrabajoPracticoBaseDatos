@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
@@ -13,13 +14,14 @@ using Trivago.RepoDapper;
 
 namespace Trivago.MVC.Controllers
 {
+    [Authorize]
     public class CiudadController : Controller
     {
         private readonly IRepoCiudadAsync _repoCiudadAsync;
         private readonly IRepoPaisAsync _repoPaisAsync;
         private readonly ILogger<CiudadController> _logger;
 
-        public CiudadController(ILogger<CiudadController> logger, IRepoCiudadAsync repoCiudadAsync, IRepoPaisAsync  repoPaisAsync)
+        public CiudadController(ILogger<CiudadController> logger, IRepoCiudadAsync repoCiudadAsync, IRepoPaisAsync repoPaisAsync)
         {
             _logger = logger;
             _repoPaisAsync = repoPaisAsync;
@@ -47,7 +49,7 @@ namespace Trivago.MVC.Controllers
             {
                 ciudadPostViewModel = new()
             };
-            ciudadViewModel.ciudadPostViewModel.paises = new SelectList(items: paises.ToList(), dataValueField: nameof(Pais.idPais), dataTextField: nameof(Pais.Nombre), selectedValue:idPais);
+            ciudadViewModel.ciudadPostViewModel.paises = new SelectList(items: paises.ToList(), dataValueField: nameof(Pais.idPais), dataTextField: nameof(Pais.Nombre), selectedValue: idPais);
             ciudadViewModel.ciudadPostViewModel.IdPaisSeleccionado = idPais;
             Console.WriteLine(idPais);
             return View(ciudadViewModel);
@@ -62,7 +64,7 @@ namespace Trivago.MVC.Controllers
                 nombre = ciudadViewModel.ciudadPostViewModel.nombre
             };
             var id = await _repoCiudadAsync.AltaAsync(ciudad);
-                        var ciudades = await _repoCiudadAsync.ListarAsync();
+            var ciudades = await _repoCiudadAsync.ListarAsync();
             ciudadViewModel.ciudadGetViewModel.ciudades = ciudades;
             return View("Index", ciudadViewModel);
         }

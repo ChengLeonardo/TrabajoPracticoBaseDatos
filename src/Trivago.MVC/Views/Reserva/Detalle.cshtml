@@ -1,0 +1,18 @@
+@using Trivago.Core.Ubicacion
+@model Trivago.Core.Ubicacion.Reserva
+@{
+    ViewData["Title"] = "Detalle";
+}
+
+
+<h1>@ViewData["Title"]</h1>
+
+<div>
+    <p>Reserva: @Model.idReserva</p>
+    <p>Precio: @Model.Precio</p>
+    <p>Desde: @Model.Entrada Hasta: @Model.Salida</p>
+    <p>Abonado por: @Model.metodoPago</p>
+    <p>Telefono de contacto: @Model.Telefono</p>
+</div>
+<a asp-action="Index">Mostrar reservas</a>
+<a asp-action="PostForm">Agregar reserva</a>

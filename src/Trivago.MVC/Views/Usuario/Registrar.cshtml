@@ -1,0 +1,17 @@
+@model UsuarioViewModel
+@{
+    ViewData["Title"] = "Login";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div>
+    
+    <form asp-action="Registrar" method="post">
+        <input type="email" asp-for="email" placeholder="Ingrese su email: ">
+        <input asp-for="nombre" placeholder="Ingrese su nombre:">
+        <input asp-for="apellido" placeholder="Ingrese su apellido">
+        <input type="password" asp-for="pass" placeholder="Ingrese la contrasenia:">
+        <button type="submit">Registrar</button>
+    </form>
+</div>

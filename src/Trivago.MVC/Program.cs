@@ -1,4 +1,6 @@
 using System.Data;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using MySqlConnector;
 using Trivago.Core;
 using Trivago.Core.Persistencia;
@@ -22,8 +24,21 @@ builder.Services.AddScoped<IRepoUsuarioAsync, RepoUsuarioAsync>();
 builder.Services.AddScoped<IRepoComentarioAsync, RepoComentarioAsync>();
 builder.Services.AddScoped<IRepoMetodoPagoAsync, RepoMetodoPagoAsync>();
 builder.Services.AddScoped<IRepoReservaAsync, RepoReservaAsync>();
+builder.Services.AddAuthentication(options =>
+{
+    // Set the default scheme to use
+    options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+})
+.AddCookie(options =>
+{
+    // Configure cookie settings like login path, etc.
+    options.LoginPath = "/Usuario/Login"; 
+    options.LogoutPath = "/Usuario/Logout";
+});
 
-
+builder.Services.AddAuthorization();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

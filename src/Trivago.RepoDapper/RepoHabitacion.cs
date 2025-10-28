@@ -32,6 +32,7 @@ public class RepoHabitacion : RepoDapper, IRepoHabitacion
     public Habitacion? Detalle(uint id)
     {
                 string sql = @" select * from Habitacion
+                        join TipoHabitacion using(idTipo)
                         where idHabitacion = @Id
                         LIMIT 1;
 
@@ -40,6 +41,7 @@ public class RepoHabitacion : RepoDapper, IRepoHabitacion
 
                         select * from Reserva
                         where idHabitacion = @Id;
+
                         ";
         using ( var multi = _conexion.QueryMultiple(sql, new { Id = id }))
         {
@@ -55,7 +57,8 @@ public class RepoHabitacion : RepoDapper, IRepoHabitacion
 
     public List<Habitacion> Listar()
     {
-        string sql = "Select * from Habitacion";
+        string sql = @"Select * from Habitacion 
+                    join TipoHabitacion using(idTipo)";
         var resultado = _conexion.Query<Habitacion>(sql).ToList();
         return resultado;
     }

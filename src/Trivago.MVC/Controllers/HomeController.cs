@@ -8,9 +8,10 @@ using Trivago.Core.Ubicacion;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.IO.Compression;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Trivago.MVC.Controllers;
-
+[Authorize]
 public class HomeController : Controller
 {
     private readonly IRepoPaisAsync _repoPaisAsync;
@@ -47,7 +48,6 @@ public class HomeController : Controller
         homeViewModel.homePostViewModel.Lugares = new SelectList(items: Lugares.ToList(), dataValueField: "id", dataTextField: "nombre");
         return View(homeViewModel);
     }
-
     [HttpPost]
     public async Task<IActionResult> Index(HomeViewModel homeViewModel)
     {

@@ -1,0 +1,21 @@
+
+@model Trivago.MVC.Models.ReservaViewModel;
+@{
+    ViewData["Title"] = "Alta";
+}
+
+<h1>@ViewData["Title"]</h1>
+<p>Agregar una reserva nueva</p>
+<form asp-action="PostForm" method="post">
+    <input asp-for="@Model.reservaPostViewModel.Telefono" placeholder="Ingrese el telefono de contacto">
+    <select value="@Model.reservaPostViewModel.IdHabitacionSeleccionado" asp-for="@Model.reservaPostViewModel.IdHabitacionSeleccionado" asp-items="@Model.reservaPostViewModel.habitaciones">
+    </select>
+    <select value="@Model.reservaPostViewModel.IdMetodoPagoSeleccionado" asp-for="@Model.reservaPostViewModel.IdMetodoPagoSeleccionado" asp-items="@Model.reservaPostViewModel.metodosPago">
+    </select>
+    <input type="date" asp-for="@Model.reservaPostViewModel.entrada" placeholder="Fecha de Entrada">
+    <input type="date" asp-for="@Model.reservaPostViewModel.salida" placeholder="Fecha de Salida">
+
+    <input hidden asp-for"@Model.reservaGetViewModel.Reservas" value="@Model.reservaGetViewModel.Reservas">
+    <button type="submit">Alta Reserva</button>
+</form>
+<a asp-action="Index"></a>

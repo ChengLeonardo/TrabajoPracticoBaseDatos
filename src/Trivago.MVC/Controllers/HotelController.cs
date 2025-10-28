@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
@@ -13,6 +14,7 @@ using Trivago.RepoDapper;
 
 namespace Trivago.MVC.Controllers
 {
+    [Authorize]
     public class HotelController : Controller
     {
         private readonly IRepoHotelAsync _repoHotelAsync;
@@ -20,7 +22,7 @@ namespace Trivago.MVC.Controllers
         private readonly IRepoCiudadAsync _repoCiudadAsync;
         private readonly ILogger<HotelController> _logger;
 
-        public HotelController(ILogger<HotelController> logger, IRepoHotelAsync repoHotelAsync, IRepoPaisAsync  repoPaisAsync, IRepoCiudadAsync repoCiudadAsync)
+        public HotelController(ILogger<HotelController> logger, IRepoHotelAsync repoHotelAsync, IRepoPaisAsync repoPaisAsync, IRepoCiudadAsync repoCiudadAsync)
         {
             _logger = logger;
             _repoPaisAsync = repoPaisAsync;
@@ -56,7 +58,7 @@ namespace Trivago.MVC.Controllers
         [HttpPost]
         public async Task<IActionResult> PostForm(HotelViewModel hotelViewModel)
         {
-            if(hotelViewModel.hotelPostViewModel.IdCiudadSeleccionado == null)
+            if (hotelViewModel.hotelPostViewModel.IdCiudadSeleccionado == null)
             {
                 Console.WriteLine("es nullo");
             }
@@ -69,7 +71,7 @@ namespace Trivago.MVC.Controllers
                 Direccion = hotelViewModel.hotelPostViewModel.Direccion
             };
             var id = await _repoHotelAsync.AltaAsync(hotel);
-                        var hoteles = await _repoHotelAsync.ListarAsync();
+            var hoteles = await _repoHotelAsync.ListarAsync();
             hotelViewModel.hotelGetViewModel.hoteles = hoteles;
             return View("Index", hotelViewModel);
         }

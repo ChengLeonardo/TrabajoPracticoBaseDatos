@@ -33,6 +33,7 @@ public class RepoHabitacionAsync : RepoDapper, IRepoHabitacionAsync
     {
                 string sql = @" select * from Habitacion
                         where idHabitacion = @Id
+                        join TipoHabitacion using(idTipo)
                         LIMIT 1;
 
                         select * from Comentario
@@ -57,7 +58,8 @@ public class RepoHabitacionAsync : RepoDapper, IRepoHabitacionAsync
 
     public async Task<List<Habitacion>> ListarAsync()
     {
-        string sql = "Select * from Habitacion";
+        string sql = @"Select * from Habitacion 
+            join TipoHabitacion using(idTipo)";
         var resultado = await _conexion.QueryAsync<Habitacion>(sql);
         return resultado.ToList();
     }
