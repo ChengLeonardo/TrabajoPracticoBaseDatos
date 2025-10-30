@@ -1,0 +1,16 @@
+@model Trivago.MVC.Models.MetodoPagoViewModel;
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>@ViewData["Title"]</h1>
+<a asp-action="PostForm">Agregar Metodo Pago</a>
+@foreach(var metodoPago in Model.metodoPagoGetViewModel.metodoPagos)
+{
+<div class="row">
+    <div class="col">
+        <a asp-action="Detalle" asp-route-id="@metodoPago.idMetodoPago">@metodoPago.TipoMedioPago</a>
+    </div>
+</div>
+}
+

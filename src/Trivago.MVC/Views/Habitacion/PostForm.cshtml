@@ -1,0 +1,17 @@
+
+@model Trivago.MVC.Models.HabitacionViewModel;
+@{
+    ViewData["Title"] = "Alta";
+}
+
+<h1>@ViewData["Title"]</h1>
+<p>Agregar una habitacion nueva</p>
+<form asp-action="PostForm" method="post">
+    <input asp-for="@Model.habitacionPostViewModel.PrecioPorNoche" placeholder="Ingrese el precio por noche">
+    <select value="@Model.habitacionPostViewModel.IdHotelSeleccionado" asp-for="@Model.habitacionPostViewModel.IdHotelSeleccionado" asp-items="@Model.habitacionPostViewModel.hoteles">
+    </select>
+        <select value="@Model.habitacionPostViewModel.IdTipoHabitacionSeleccionado" asp-for="@Model.habitacionPostViewModel.IdTipoHabitacionSeleccionado" asp-items="@Model.habitacionPostViewModel.tipoHabitaciones">
+    </select>
+    <button type="submit">Alta Habitacion</button>
+</form>
+<a asp-action="Index"></a>

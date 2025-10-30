@@ -1,0 +1,23 @@
+@using Trivago.Core.Ubicacion
+@model Trivago.Core.Ubicacion.MetodoPago
+@{
+    ViewData["Title"] = "Detalle";
+}
+
+
+<h1>@ViewData["Title"]</h1>
+
+<div>
+    <p>Nombre: @Model.TipoMedioPago</p>
+    <p>Reservas:</p>
+        @foreach(var reserva in Model.Reservas)
+        {
+        <div class="row">
+            <div class="col">
+                <a asp-action="Detalle" asp-controller="Reserva" asp-route-id="@reserva.idReserva">@reserva.idReserva</a>
+            </div>
+        </div>
+        }
+</div>
+<a asp-action="Index">Mostrar hoteles</a>
+<a asp-action="PostForm">Agregar hotel</a>

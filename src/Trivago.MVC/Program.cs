@@ -24,6 +24,7 @@ builder.Services.AddScoped<IRepoUsuarioAsync, RepoUsuarioAsync>();
 builder.Services.AddScoped<IRepoComentarioAsync, RepoComentarioAsync>();
 builder.Services.AddScoped<IRepoMetodoPagoAsync, RepoMetodoPagoAsync>();
 builder.Services.AddScoped<IRepoReservaAsync, RepoReservaAsync>();
+builder.Services.AddScoped<IRepoTipoHabitacionAsync, RepoTipoHabitacionAsync>();
 builder.Services.AddAuthentication(options =>
 {
     // Set the default scheme to use

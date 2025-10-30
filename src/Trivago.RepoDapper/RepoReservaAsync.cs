@@ -32,10 +32,42 @@ public class RepoReservaAsync : RepoDapper, IRepoReservaAsync
 
     public async Task<Reserva?> DetalleAsync(uint id)
     {
-        string sql = "Select * from Reserva where idReserva = @Id LIMIT 1";
-        var resultado = await _conexion.QuerySingleOrDefaultAsync<Reserva>(sql, new { Id = id});
-        return resultado;
+        string sql = @"
+            SELECT 
+                -- columnas de Reserva
+                r.idReserva, r.idHabitacion, r.idMetododePago, r.Entrada, r.Salida, r.Precio, r.Telefono,
+                
+                -- columnas de Habitacion
+                h.idHabitacion, h.idHotel, h.PrecioPorNoche, h.idTipo,
+                
+                -- columnas de TipoHabitacion
+                t.idTipo, t.Nombre,
+                
+                -- columnas de MetodoPago
+                m.idMetodoPago, m.TipoMedioPago
+            FROM Reserva r
+            INNER JOIN Habitacion h ON r.idHabitacion = h.idHabitacion
+            INNER JOIN TipoHabitacion t ON h.idTipo = t.idTipo
+            INNER JOIN MetodoPago m ON r.idMetododePago = m.idMetodoPago
+            WHERE r.idReserva = @Id;
+        ";
+
+        var resultado = await _conexion.QueryAsync<Reserva, Habitacion, TipoHabitacion, MetodoPago, Reserva>(
+            sql,
+            (r, h, t, m) =>
+            {
+                h.tipoHabitacion = t;
+                r.habitacion = h;
+                r.metodoPago = m;
+                return r;
+            },
+            new { Id = id },
+            splitOn: "idHabitacion,idTipo,idMetodoPago" // 👈 debe coincidir EXACTAMENTE con las columnas del SELECT
+        );
+
+        return resultado.SingleOrDefault();
     }
+
 
     public async Task<List<Reserva>> ListarAsync()
     {

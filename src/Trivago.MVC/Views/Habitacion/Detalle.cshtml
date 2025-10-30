@@ -1,0 +1,23 @@
+@using Trivago.Core.Ubicacion
+@model Trivago.Core.Ubicacion.Habitacion
+@{
+    ViewData["Title"] = "Detalle";
+}
+
+
+<h1>@ViewData["Title"]</h1>
+
+<div>
+    <p>Nombre: @Model.tipoHabitacion.Nombre</p>
+    <p>Comentarios:</p>
+        @foreach(var comentario in Model.Comentarios)
+        {
+        <div class="row">
+            <div class="col">
+                <p>Puntuacion: @comentario.Calificacion @comentario.comentario @comentario.Fecha</p>
+            </div>
+        </div>
+        }
+</div>
+<a asp-action="Index">Mostrar habitaciones</a>
+<a asp-action="PostForm">Agregar habitaciones</a>

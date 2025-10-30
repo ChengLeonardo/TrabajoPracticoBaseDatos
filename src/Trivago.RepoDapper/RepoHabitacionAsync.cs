@@ -29,40 +29,63 @@ public class RepoHabitacionAsync : RepoDapper, IRepoHabitacionAsync
     }
 
 
-    public async Task<Habitacion?> DetalleAsync(uint id)
-    {
-                string sql = @" select * from Habitacion
-                        where idHabitacion = @Id
-                        join TipoHabitacion using(idTipo)
-                        LIMIT 1;
 
-                        select * from Comentario
-                        Where idHabitacion = @Id;
+public async Task<Habitacion?> DetalleAsync(uint id)
+{
+    // 1️⃣ primer query: Habitacion + TipoHabitacion
+    string sqlHabitacion = @"
+        SELECT h.*, t.idTipo, t.Nombre
+        FROM Habitacion h
+        INNER JOIN TipoHabitacion t ON h.idTipo = t.idTipo
+        WHERE h.idHabitacion = @Id;
+    ";
 
-                        select * from Reserva
-                        where idHabitacion = @Id;
-                        ";
-        using ( var multi = await _conexion.QueryMultipleAsync(sql, new { Id = id }))
-        {
-            var habitacion = await multi.ReadSingleOrDefaultAsync<Habitacion>();
-            if (habitacion != null)
-            {
-                var Comentarios = await multi.ReadAsync<Comentario>();
-                var Reservas = await  multi.ReadAsync<Reserva>();
-                habitacion.Comentarios = Comentarios.ToList();
-                habitacion.Reservas = Reservas.ToList();
-            }
-            return habitacion;
-        }
-    }
+    var habitacion = (await _conexion.QueryAsync<Habitacion, TipoHabitacion, Habitacion>(
+        sqlHabitacion,
+        (h, t) => { h.tipoHabitacion = t; return h; },
+        new { Id = id },
+        splitOn: "idTipo"
+    )).SingleOrDefault();
+
+    if (habitacion is null)
+        return null;
+
+    // 2️⃣ segundo query: Comentarios + Reservas
+    string sqlExtras = @"
+        SELECT * FROM Comentario WHERE idHabitacion = @Id;
+        SELECT * FROM Reserva WHERE idHabitacion = @Id;
+    ";
+
+    using var multi = await _conexion.QueryMultipleAsync(sqlExtras, new { Id = id });
+
+    habitacion.Comentarios = (await multi.ReadAsync<Comentario>()).ToList();
+    habitacion.Reservas = (await multi.ReadAsync<Reserva>()).ToList();
+
+    return habitacion;
+}
+
+
 
     public async Task<List<Habitacion>> ListarAsync()
     {
-        string sql = @"Select * from Habitacion 
-            join TipoHabitacion using(idTipo)";
-        var resultado = await _conexion.QueryAsync<Habitacion>(sql);
+        string sql = @"
+            SELECT h.*, t.* 
+            FROM Habitacion h
+            JOIN TipoHabitacion t ON h.idTipo = t.idTipo;";
+
+        var resultado = await _conexion.QueryAsync<Habitacion, TipoHabitacion, Habitacion>(
+            sql,
+            (habitacion, tipo) =>
+            {
+                habitacion.tipoHabitacion = tipo;
+                return habitacion;
+            },
+            splitOn: "idTipo"
+        );
+
         return resultado.ToList();
     }
+
 
         public async Task<List<Habitacion>> InformarHabitacionPorIdHotelAsync(uint idHotel)
     {
