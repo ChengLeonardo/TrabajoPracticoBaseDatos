@@ -1,19 +1,25 @@
 @using Trivago.Core.Ubicacion
 @model Trivago.Core.Ubicacion.Reserva
+
 @{
-    ViewData["Title"] = "Detalle";
+    ViewData["Title"] = "Detalle de Reserva";
 }
 
+<div class="container my-5 text-light bg-dark p-4 rounded-4 shadow-lg border border-secondary">
+    <h1 class="mb-4 text-info">@ViewData["Title"]</h1>
 
-<h1>@ViewData["Title"]</h1>
+    <div class="card bg-secondary text-light mb-4 border-0 shadow-sm p-3">
+        <p><strong>Reserva ID:</strong> @Model.idReserva</p>
+        <p><strong>Precio:</strong> @Model.Precio</p>
+        <p><strong>Desde:</strong> @Model.Entrada <strong>Hasta:</strong> @Model.Salida</p>
+        <p><strong>Abonado por:</strong> @Model.metodoPago.TipoMedioPago</p>
+        <p><strong>Tipo de Habitación:</strong> @Model.habitacion.tipoHabitacion.Nombre</p>
+        <p><strong>Teléfono de contacto:</strong> @Model.Telefono</p>
+    </div>
 
-<div>
-    <p>Reserva: @Model.idReserva</p>
-    <p>Precio: @Model.Precio</p>
-    <p>Desde: @Model.Entrada Hasta: @Model.Salida</p>
-    <p>Abonado por: @Model.metodoPago.TipoMedioPago</p>
-    <p>Tipo de Habitacion: @Model.habitacion.tipoHabitacion.Nombre</p>
-    <p>Telefono de contacto: @Model.Telefono</p>
+    <div class="d-flex gap-3">
+        <a asp-action="Index" class="btn btn-outline-light btn-sm">🔙 Mostrar reservas</a>
+        <a asp-action="PostForm" class="btn btn-success btn-sm">➕ Agregar reserva</a>
+    </div>
 </div>
-<a asp-action="Index">Mostrar reservas</a>
-<a asp-action="PostForm">Agregar reserva</a>
+

@@ -23,8 +23,8 @@ namespace Trivago.MVC.Models
         public SelectList metodosPago { get; set; }
 
         public uint? IdMetodoPagoSeleccionado { get; set; }
-        public DateTime entrada { get; set; }
-        public DateTime salida { get; set; }
+        public DateTime entrada { get; set; } = DateTime.Now;
+        public DateTime salida { get; set; } = DateTime.Now;
         public uint? Telefono { get; set; }
     }
 

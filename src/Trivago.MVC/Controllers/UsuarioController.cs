@@ -40,7 +40,7 @@ public class UsuarioController : Controller
         return View();
     }
     [HttpPost]
-    public IActionResult Registrar(UsuarioViewModel usuarioViewModel)
+    public async Task<IActionResult> Registrar(UsuarioViewModel usuarioViewModel)
     {
         Usuario usuario = new Usuario()
         {
@@ -49,7 +49,18 @@ public class UsuarioController : Controller
             Contrasena = usuarioViewModel.pass,
             Apellido = usuarioViewModel.apellido
         };
-        _repoUsuarioAsync.AltaAsync(usuario);
+        await _repoUsuarioAsync.AltaAsync(usuario);
+                var claims = new List<Claim>
+        {
+            new Claim(ClaimTypes.NameIdentifier, usuario.idUsuario.ToString(), ClaimValueTypes.String),
+            new Claim(ClaimTypes.Email, usuario.Mail, ClaimValueTypes.String),
+        };
+
+        var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+        var principal = new ClaimsPrincipal(identity);
+
+        await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+
         return RedirectToAction("Index", "Home");
     }
 

@@ -1,13 +1,23 @@
+@model Trivago.MVC.Models.MetodoPagoViewModel
 
-@model Trivago.MVC.Models.MetodoPagoViewModel;
 @{
-    ViewData["Title"] = "Alta";
+    ViewData["Title"] = "Alta de Método de Pago";
 }
 
-<h1>@ViewData["Title"]</h1>
-<p>Agregar una Metodo Pago nuevo</p>
-<form asp-action="PostForm" method="post">
-    <input asp-for="@Model.metodoPagoPostViewModel.nombre" placeholder="Ingrese el nombre del metodoPago">
-    <button type="submit">Alta metodoPago</button>
-</form>
-<a asp-action="Index">Mostrar Metodos Pagos</a>
+<div class="container my-5 text-light">
+    <h1 class="text-info mb-3">@ViewData["Title"]</h1>
+    <p>Agregar un método de pago nuevo</p>
+
+    <form asp-action="PostForm" method="post" class="bg-dark p-4 rounded-4 border border-secondary shadow-sm">
+        <div class="mb-3">
+            <input asp-for="@Model.metodoPagoPostViewModel.nombre" 
+                   placeholder="Ingrese el nombre del método de pago"
+                   class="form-control bg-secondary text-light border-1 border-secondary" />
+        </div>
+
+        <button type="submit" class="btn btn-info">➕ Alta Método de Pago</button>
+    </form>
+
+    <a asp-action="Index" class="btn btn-outline-light mt-3">💳 Mostrar Métodos de Pago</a>
+</div>
+

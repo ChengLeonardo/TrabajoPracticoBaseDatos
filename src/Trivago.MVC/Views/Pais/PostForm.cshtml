@@ -1,14 +1,25 @@
+@model Trivago.MVC.Models.PaisViewModel
 
-@model Trivago.MVC.Models.PaisViewModel;
 @{
-    ViewData["Title"] = "Alta";
+    ViewData["Title"] = "Alta de País";
 }
 
-<h1>@ViewData["Title"]</h1>
-<p>Agregar una pais nueva</p>
-<form asp-action="PostForm" method="post">
-    <input asp-for="@Model.paisPostViewModel.nombre" placeholder="Ingrese el nombre del pais">
-    <input hidden asp-for"@Model.paisGetViewModel.Paises" value="@Model.paisGetViewModel.Paises.ToList()">
-    <button type="submit">Alta pais</button>
-</form>
-<a asp-action="Index">Mostrar paises</a>
+<div class="container my-5 text-light">
+    <h1 class="text-info mb-3">@ViewData["Title"]</h1>
+    <p>Agregar un país nuevo</p>
+
+    <form asp-action="PostForm" method="post" class="bg-dark p-4 rounded-4 border border-secondary shadow-sm">
+        <div class="mb-3">
+            <input asp-for="@Model.paisPostViewModel.nombre"
+                   placeholder="Ingrese el nombre del país"
+                   class="form-control bg-secondary text-light border-1 border-secondary" />
+        </div>
+
+        <input type="hidden" asp-for="@Model.paisGetViewModel.Paises" value="@Model.paisGetViewModel.Paises.ToList()" />
+
+        <button type="submit" class="btn btn-info">➕ Alta País</button>
+    </form>
+
+    <a asp-action="Index" class="btn btn-outline-light mt-3">🌍 Mostrar Países</a>
+</div>
+

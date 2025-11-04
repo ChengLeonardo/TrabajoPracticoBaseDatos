@@ -1,48 +1,66 @@
-﻿/* Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
-for details on configuring this project to bundle and minify static web assets. */
-
-a.navbar-brand {
-  white-space: normal;
-  text-align: center;
-  word-break: break-all;
+﻿/* 🌑 Tema oscuro global */
+body {
+    background-color: #121212;
+    color: #f0f0f0;
 }
 
-a {
-  color: #0077cc;
+.navbar, .dropdown-menu {
+    background-color: #1e1e1e !important;
 }
 
-.btn-primary {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
+.navbar .nav-link, .navbar-brand, .dropdown-item {
+    color: #f0f0f0 !important;
 }
 
-.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
+.navbar .nav-link:hover, .dropdown-item:hover {
+    color: #17a2b8 !important;
+    background-color: #2a2a2a !important;
 }
 
-.border-top {
-  border-top: 1px solid #e5e5e5;
-}
-.border-bottom {
-  border-bottom: 1px solid #e5e5e5;
+.dropdown-menu {
+    background-color: #1e1e1e !important; /* fondo oscuro */
+    border: 1px solid #333;
 }
 
-.box-shadow {
-  box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
+.dropdown-item {
+    color: #f0f0f0 !important; /* texto claro */
 }
 
-button.accept-policy {
-  font-size: 1rem;
-  line-height: inherit;
+.dropdown-item:hover, .dropdown-item:focus {
+    color: #17a2b8 !important; /* texto turquesa al hover */
+    background-color: #2a2a2a !important; /* fondo más claro al hover */
 }
 
-.footer {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  white-space: nowrap;
-  line-height: 60px;
+.container {
+    backdrop-filter: blur(3px);
 }
+
+a.btn, button.btn {
+    transition: 0.2s;
+}
+
+a.btn:hover, button.btn:hover {
+    opacity: 0.85;
+}
+
+.card, .list-group-item {
+    background-color: #1e1e1e;
+    border: 1px solid #333;
+    color: #f0f0f0;
+}
+
+.list-group-item:hover {
+    background-color: #2a2a2a;
+}
+
+.form-control, .form-select {
+    background-color: #2a2a2a;
+    color: #f0f0f0;
+    border: 1px solid #444;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: #17a2b8;
+    box-shadow: 0 0 0 0.25rem rgba(23,162,184,0.25);
+}
+

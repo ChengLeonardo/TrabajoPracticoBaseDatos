@@ -1,23 +1,53 @@
 @using Trivago.Core.Ubicacion
 @model Trivago.Core.Ubicacion.Habitacion
+
 @{
-    ViewData["Title"] = "Detalle";
+    ViewData["Title"] = "Detalle de Habitación";
 }
 
+<div class="container my-5 text-light bg-dark p-4 rounded-4 shadow-lg border border-secondary">
+    <h1 class="mb-4 text-info">@ViewData["Title"]</h1>
 
-<h1>@ViewData["Title"]</h1>
-
-<div>
-    <p>Nombre: @Model.tipoHabitacion.Nombre</p>
-    <p>Comentarios:</p>
-        @foreach(var comentario in Model.Comentarios)
-        {
-        <div class="row">
-            <div class="col">
-                <p>Puntuacion: @comentario.Calificacion @comentario.comentario @comentario.Fecha</p>
-            </div>
+    <div class="card bg-secondary text-light mb-4 border-0 shadow-sm">
+        <div class="card-body">
+            <h5 class="card-title text-warning">Tipo de habitación</h5>
+            <p class="card-text fs-5">@Model.tipoHabitacion.Nombre</p>
         </div>
+    </div>
+
+    <h4 class="mb-3">Comentarios</h4>
+
+    <form asp-action="Comentar" method="post" class="mb-4">
+        <input type="hidden" name="idHabitacion" value="@Model.idHabitacion" />
+
+        <div class="mb-3">
+            <label class="form-label text-light">Puntuación (1–10)</label>
+            <input type="number" name="Calificacion" min="1" max="10" class="form-control bg-secondary text-light border-0" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label text-light">Comentario</label>
+            <textarea name="Texto" class="form-control bg-secondary text-light border-0" rows="3"></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary">💬 Enviar</button>
+    </form>
+
+    <div class="list-group mb-4">
+        @foreach (var comentario in Model.Comentarios)
+        {
+            <div class="list-group-item bg-dark text-light border-secondary hover-overlay">
+                <p class="mb-1">
+                    ⭐ <strong>@comentario.Calificacion</strong> — @comentario.comentario
+                </p>
+                <small class="text-muted">@comentario.Fecha</small>
+            </div>
         }
+    </div>
+
+    <div class="d-flex gap-3">
+        <a asp-action="Index" class="btn btn-outline-light btn-sm">🛏️ Mostrar habitaciones</a>
+        <a asp-action="PostForm" class="btn btn-success btn-sm">➕ Agregar habitación</a>
+        <a asp-controller="Reserva" asp-action="PostForm" asp-route-idHabitacion="@Model.idHabitacion" class="btn btn-primary btn-sm">📅 Agregar reserva</a>
+    </div>
 </div>
-<a asp-action="Index">Mostrar habitaciones</a>
-<a asp-action="PostForm">Agregar habitaciones</a>

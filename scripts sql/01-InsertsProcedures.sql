@@ -160,10 +160,11 @@ CREATE PROCEDURE insert_comentario(
   IN p_idHabitacion INT UNSIGNED,
   IN p_Comentario VARCHAR(100),
   IN p_Calificacion TINYINT(10),
+  IN p_Fecha DATETIME,
   out p_idComentario int unsigned
 )
 BEGIN
-  INSERT INTO `Comentario` (`idHabitacion`, `Comentario`, `Calificacion`) VALUES (p_idHabitacion, p_Comentario, p_Calificacion);
+  INSERT INTO `Comentario` (`idHabitacion`, `Comentario`, `Calificacion`, `Fecha`) VALUES (p_idHabitacion, p_Comentario, p_Calificacion, p_Fecha);
   set p_idComentario = last_insert_id();
 END //
 

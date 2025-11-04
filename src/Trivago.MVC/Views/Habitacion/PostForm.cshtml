@@ -1,17 +1,33 @@
+@model Trivago.MVC.Models.HabitacionViewModel
 
-@model Trivago.MVC.Models.HabitacionViewModel;
 @{
-    ViewData["Title"] = "Alta";
+    ViewData["Title"] = "Alta de Habitación";
 }
 
-<h1>@ViewData["Title"]</h1>
-<p>Agregar una habitacion nueva</p>
-<form asp-action="PostForm" method="post">
-    <input asp-for="@Model.habitacionPostViewModel.PrecioPorNoche" placeholder="Ingrese el precio por noche">
-    <select value="@Model.habitacionPostViewModel.IdHotelSeleccionado" asp-for="@Model.habitacionPostViewModel.IdHotelSeleccionado" asp-items="@Model.habitacionPostViewModel.hoteles">
-    </select>
-        <select value="@Model.habitacionPostViewModel.IdTipoHabitacionSeleccionado" asp-for="@Model.habitacionPostViewModel.IdTipoHabitacionSeleccionado" asp-items="@Model.habitacionPostViewModel.tipoHabitaciones">
-    </select>
-    <button type="submit">Alta Habitacion</button>
-</form>
-<a asp-action="Index"></a>
+<div class="container my-5 text-light bg-dark p-4 rounded-4 shadow-lg border border-secondary">
+    <h1 class="mb-3 text-info">@ViewData["Title"]</h1>
+    <p class="text-muted">Agregar una nueva habitación al sistema</p>
+
+    <form asp-action="PostForm" method="post" class="mt-4">
+        <div class="mb-3">
+            <label asp-for="@Model.habitacionPostViewModel.PrecioPorNoche" class="form-label text-light">Precio por noche</label>
+            <input asp-for="@Model.habitacionPostViewModel.PrecioPorNoche" class="form-control bg-secondary text-light border-0" placeholder="Ingrese el precio por noche" />
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="@Model.habitacionPostViewModel.IdHotelSeleccionado" class="form-label text-light">Hotel</label>
+            <select asp-for="@Model.habitacionPostViewModel.IdHotelSeleccionado" asp-items="@Model.habitacionPostViewModel.hoteles" class="form-select bg-secondary text-light border-0"></select>
+        </div>
+
+        <div class="mb-4">
+            <label asp-for="@Model.habitacionPostViewModel.IdTipoHabitacionSeleccionado" class="form-label text-light">Tipo de habitación</label>
+            <select asp-for="@Model.habitacionPostViewModel.IdTipoHabitacionSeleccionado" asp-items="@Model.habitacionPostViewModel.tipoHabitaciones" class="form-select bg-secondary text-light border-0"></select>
+        </div>
+
+        <div class="d-flex gap-3">
+            <button type="submit" class="btn btn-success">✅ Alta Habitación</button>
+            <a asp-action="Index" class="btn btn-outline-light">⬅️ Volver</a>
+        </div>
+    </form>
+</div>
+

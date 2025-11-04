@@ -177,6 +177,7 @@ CREATE TABLE IF NOT EXISTS `5to_Trivago`.`Comentario` (
   `idHabitacion` INT UNSIGNED NOT NULL,
   `Comentario` VARCHAR(100) NOT NULL,
   `Calificacion` TINYINT(10) NOT NULL,
+  `Fecha` DATETIME NOT NULL,
   PRIMARY KEY (`idComentario`),
   INDEX `fk_Comentario_Habitacion_idx` (`idHabitacion` ASC) ,
   CONSTRAINT `fk_Comentario_Habitacion`

@@ -32,9 +32,11 @@ public class ReservaController : Controller
 
     public async Task<IActionResult> Index()
     {
+        var reservas = await _repoReservaAsync.ListarAsync();
+        reservas = reservas.Where(r => r.idUsuario == Convert.ToUInt32(User.FindFirst(ClaimTypes.NameIdentifier).Value)).ToList();
         ReservaGetViewModel reservaGetViewModel = new()
         {
-            Reservas = await _repoReservaAsync.ListarAsync()
+            Reservas = reservas
         };
         ReservaViewModel reservaViewModel = new()
         {
@@ -44,7 +46,7 @@ public class ReservaController : Controller
     }
 
     [HttpGet]
-    public async Task<IActionResult> PostForm()
+    public async Task<IActionResult> PostForm(uint? idHabitacion = 0)
     {
         var habitaciones = await _repoHabitacionAsync.ListarAsync();
         var metodoPagos = await _repoMetodoPagoAsync.ListarAsync();
@@ -53,7 +55,8 @@ public class ReservaController : Controller
 
             reservaPostViewModel = new()
             {
-                habitaciones = new SelectList(items: habitaciones.ToList(), dataValueField: nameof(Habitacion.idHabitacion), dataTextField: "tipoHabitacion.Nombre"),
+                IdHabitacionSeleccionado = idHabitacion,
+                habitaciones = new SelectList(items: habitaciones.ToList(), dataValueField: nameof(Habitacion.idHabitacion), dataTextField: "tipoHabitacion.Nombre", selectedValue: idHabitacion),
                 metodosPago = new SelectList(items: metodoPagos.ToList(), dataValueField: nameof(MetodoPago.idMetodoPago), dataTextField: nameof(MetodoPago.TipoMedioPago))
             }
         };
@@ -70,16 +73,14 @@ public class ReservaController : Controller
         {
             habitacion = new() { idHabitacion = reservaViewModel.reservaPostViewModel.IdHabitacionSeleccionado.Value },
             metodoPago = new() { idMetodoPago = reservaViewModel.reservaPostViewModel.IdMetodoPagoSeleccionado.Value },
-            idUsuario = Convert.ToUInt32(HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value),
+            idUsuario = Convert.ToUInt32(User.FindFirst(ClaimTypes.NameIdentifier).Value),
             Salida = reservaViewModel.reservaPostViewModel.salida,
             Entrada = reservaViewModel.reservaPostViewModel.entrada,
             Telefono = reservaViewModel.reservaPostViewModel.Telefono.Value,
             Precio = Precio.Days * habitacion.PrecioPorNoche
         };
         var id = await _repoReservaAsync.AltaAsync(reserva);
-        var reservaes = await _repoReservaAsync.ListarAsync();
-        reservaViewModel.reservaGetViewModel.Reservas = reservaes;
-        return View("Index", reservaViewModel);
+        return RedirectToAction("Index");
     }
 
     [HttpGet]

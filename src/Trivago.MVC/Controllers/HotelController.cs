@@ -44,14 +44,15 @@ namespace Trivago.MVC.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> PostForm()
+        public async Task<IActionResult> PostForm(uint? idCiudad = 0)
         {
             var ciudades = await _repoCiudadAsync.ListarAsync();
             HotelViewModel hotelViewModel = new()
             {
                 hotelPostViewModel = new()
             };
-            hotelViewModel.hotelPostViewModel.ciudades = new SelectList(items: ciudades.ToList(), dataValueField: nameof(Ciudad.idCiudad), dataTextField: nameof(Ciudad.nombre));
+            hotelViewModel.hotelPostViewModel.IdCiudadSeleccionado = idCiudad;
+            hotelViewModel.hotelPostViewModel.ciudades = new SelectList(items: ciudades.ToList(), dataValueField: nameof(Ciudad.idCiudad), dataTextField: nameof(Ciudad.nombre), selectedValue: idCiudad);
             return View(hotelViewModel);
         }
 

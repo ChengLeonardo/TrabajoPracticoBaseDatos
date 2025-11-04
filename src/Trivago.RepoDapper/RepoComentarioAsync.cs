@@ -15,6 +15,7 @@ public class RepoComentarioAsync : RepoDapper, IRepoComentarioAsync
         parametros.Add("p_idHabitacion", comentario.Habitacion);
         parametros.Add("p_Comentario", comentario.comentario);
         parametros.Add("p_Calificacion", comentario.Calificacion);
+        parametros.Add("p_Fecha", comentario.Fecha);
         parametros.Add("p_idComentario", direction: ParameterDirection.Output);
                
         await _conexion.ExecuteAsync(storedProcedure, parametros);

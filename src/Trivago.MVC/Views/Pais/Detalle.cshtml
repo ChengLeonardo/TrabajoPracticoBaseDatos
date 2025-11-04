@@ -1,25 +1,32 @@
 @using Trivago.Core.Ubicacion
 @model Trivago.Core.Ubicacion.Pais
+
 @{
-    ViewData["Title"] = "Detalle";
+    ViewData["Title"] = "Detalle de País";
 }
 
+<div class="container my-5 text-light bg-dark p-4 rounded-4 shadow-lg border border-secondary">
+    <h1 class="mb-4 text-info">@ViewData["Title"]</h1>
 
-<h1>@ViewData["Title"]</h1>
+    <div class="card bg-secondary text-light mb-4 border-0 shadow-sm p-3">
+        <p><strong>ID País:</strong> @Model.idPais</p>
+        <p><strong>Nombre:</strong> @Model.Nombre</p>
+    </div>
 
-<div>
-    <p>idPais: @Model.idPais</p>
-    <p>Nombre: @Model.Nombre</p>
-    <p>Ciudades:</p>
+    <h4 class="mb-3">Ciudades</h4>
+    <div class="list-group mb-4">
         @foreach(var ciudad in Model.Ciudades)
         {
-        <div class="row">
-            <div class="col">
-                <a asp-action="Detalle" asp-controller="Ciudad" asp-route-id="@ciudad.idCiudad">@ciudad.nombre</a>
-            </div>
-        </div>
+            <a class="list-group-item list-group-item-action bg-dark text-light border-secondary hover-overlay"
+               asp-controller="Ciudad" asp-action="Detalle" asp-route-id="@ciudad.idCiudad">
+                🌆 @ciudad.nombre
+            </a>
         }
+    </div>
+
+    <div class="d-flex gap-3">
+        <a asp-action="Index" class="btn btn-outline-light btn-sm">🔙 Mostrar países</a>
+        <a asp-action="PostForm" class="btn btn-success btn-sm">➕ Agregar país</a>
+        <a asp-controller="Ciudad" asp-action="PostForm" asp-route-idPais="@Model.idPais" class="btn btn-primary btn-sm">➕ Agregar ciudad</a>
+    </div>
 </div>
-<a asp-action="Index">Mostrar paises</a>
-<a asp-action="PostForm">Agregar pais</a>
-<a asp-controller="Ciudad" asp-action="PostForm" asp-route-idPais="@Model.idPais">Agregar ciudad</a>

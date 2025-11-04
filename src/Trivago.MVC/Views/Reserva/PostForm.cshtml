@@ -1,21 +1,49 @@
+@model Trivago.MVC.Models.ReservaViewModel
 
-@model Trivago.MVC.Models.ReservaViewModel;
 @{
-    ViewData["Title"] = "Alta";
+    ViewData["Title"] = "Alta de Reserva";
 }
 
-<h1>@ViewData["Title"]</h1>
-<p>Agregar una reserva nueva</p>
-<form asp-action="PostForm" method="post">
-    <input asp-for="@Model.reservaPostViewModel.Telefono" placeholder="Ingrese el telefono de contacto">
-    <select value="@Model.reservaPostViewModel.IdHabitacionSeleccionado" asp-for="@Model.reservaPostViewModel.IdHabitacionSeleccionado" asp-items="@Model.reservaPostViewModel.habitaciones">
-    </select>
-    <select value="@Model.reservaPostViewModel.IdMetodoPagoSeleccionado" asp-for="@Model.reservaPostViewModel.IdMetodoPagoSeleccionado" asp-items="@Model.reservaPostViewModel.metodosPago">
-    </select>
-    <input type="date" asp-for="@Model.reservaPostViewModel.entrada" placeholder="Fecha de Entrada">
-    <input type="date" asp-for="@Model.reservaPostViewModel.salida" placeholder="Fecha de Salida">
+<div class="container my-5 text-light">
+    <h1 class="text-info mb-3">@ViewData["Title"]</h1>
+    <p>Agregar una reserva nueva</p>
 
-    <input hidden asp-for"@Model.reservaGetViewModel.Reservas" value="@Model.reservaGetViewModel.Reservas">
-    <button type="submit">Alta Reserva</button>
-</form>
-<a asp-action="Index"></a>
+    <form asp-action="PostForm" method="post" class="bg-dark p-4 rounded-4 border border-secondary shadow-sm">
+        <div class="mb-3">
+            <input asp-for="@Model.reservaPostViewModel.Telefono"
+                   placeholder="Ingrese el teléfono de contacto"
+                   class="form-control bg-secondary text-light border-1 border-secondary" />
+        </div>
+
+        <div class="mb-3">
+            <select asp-for="@Model.reservaPostViewModel.IdHabitacionSeleccionado"
+                    asp-items="@Model.reservaPostViewModel.habitaciones"
+                    class="form-select bg-secondary text-light border-1 border-secondary">
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <select asp-for="@Model.reservaPostViewModel.IdMetodoPagoSeleccionado"
+                    asp-items="@Model.reservaPostViewModel.metodosPago"
+                    class="form-select bg-secondary text-light border-1 border-secondary">
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <input type="date" asp-for="@Model.reservaPostViewModel.entrada"
+                   class="form-control bg-secondary text-light border-1 border-secondary" />
+        </div>
+
+        <div class="mb-3">
+            <input type="date" asp-for="@Model.reservaPostViewModel.salida"
+                   class="form-control bg-secondary text-light border-1 border-secondary" />
+        </div>
+
+        <input type="hidden" asp-for="@Model.reservaGetViewModel.Reservas" value="@Model.reservaGetViewModel.Reservas" />
+
+        <button type="submit" class="btn btn-info">➕ Alta Reserva</button>
+    </form>
+
+    <a asp-action="Index" class="btn btn-outline-light mt-3">📄 Mostrar Reservas</a>
+</div>
+

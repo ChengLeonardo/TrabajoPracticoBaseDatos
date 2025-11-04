@@ -1,16 +1,29 @@
+@model Trivago.MVC.Models.CiudadViewModel
 
-@model Trivago.MVC.Models.CiudadViewModel;
 @{
-    ViewData["Title"] = "Alta";
+    ViewData["Title"] = "Alta de Ciudad";
 }
 
-<h1>@ViewData["Title"]</h1>
-<p>Agregar una ciudad nueva</p>
-<form asp-action="PostForm" method="post">
-    <input asp-for="@Model.ciudadPostViewModel.nombre" placeholder="Ingrese el nombre de la ciudad">
-    <select value="@Model.ciudadPostViewModel.IdPaisSeleccionado" asp-for="@Model.ciudadPostViewModel.IdPaisSeleccionado" asp-items="@Model.ciudadPostViewModel.paises">
-    </select>
-    <input hidden asp-for"@Model.ciudadGetViewModel.ciudades" value="@Model.ciudadGetViewModel.ciudades">
-    <button type="submit">Alta Ciudad</button>
-</form>
-<a asp-action="Index"></a>
+<div class="container my-5 text-light bg-dark p-4 rounded-4 shadow-lg border border-secondary">
+    <h1 class="mb-3 text-info">@ViewData["Title"]</h1>
+    <p class="text-muted">Agregar una nueva ciudad al sistema</p>
+
+    <form asp-action="PostForm" method="post" class="mt-4">
+        <div class="mb-3">
+            <label asp-for="@Model.ciudadPostViewModel.nombre" class="form-label text-light">Nombre de ciudad</label>
+            <input asp-for="@Model.ciudadPostViewModel.nombre" class="form-control bg-secondary text-light border-0" placeholder="Ingrese el nombre de la ciudad" />
+        </div>
+
+        <div class="mb-4">
+            <label asp-for="@Model.ciudadPostViewModel.IdPaisSeleccionado" class="form-label text-light">País</label>
+            <select asp-for="@Model.ciudadPostViewModel.IdPaisSeleccionado" asp-items="@Model.ciudadPostViewModel.paises" class="form-select bg-secondary text-light border-0"></select>
+        </div>
+
+        <input type="hidden" asp-for="@Model.ciudadGetViewModel.ciudades" />
+
+        <div class="d-flex gap-3">
+            <button type="submit" class="btn btn-success">✅ Alta Ciudad</button>
+            <a asp-action="Index" class="btn btn-outline-light">⬅️ Volver</a>
+        </div>
+    </form>
+</div>

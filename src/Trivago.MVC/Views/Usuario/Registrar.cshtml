@@ -1,17 +1,69 @@
 @model UsuarioViewModel
 @{
-    ViewData["Title"] = "Login";
+    ViewData["Title"] = "Registrar Usuario";
 }
 
-<h1>@ViewData["Title"]</h1>
+<div class="container d-flex justify-content-center align-items-center vh-100">
+    <div class="bg-dark text-light p-5 rounded-4 shadow-lg border border-secondary" style="min-width: 350px;">
+        <h1 class="text-info mb-4 text-center">@ViewData["Title"]</h1>
 
-<div>
-    
-    <form asp-action="Registrar" method="post">
-        <input type="email" asp-for="email" placeholder="Ingrese su email: ">
-        <input asp-for="nombre" placeholder="Ingrese su nombre:">
-        <input asp-for="apellido" placeholder="Ingrese su apellido">
-        <input type="password" asp-for="pass" placeholder="Ingrese la contrasenia:">
-        <button type="submit">Registrar</button>
-    </form>
+        <form asp-action="Registrar" method="post">
+            <div class="mb-3">
+                <input type="email" asp-for="email" placeholder="Ingrese su email"
+                       class="form-control bg-secondary text-light border-1 border-secondary" />
+            </div>
+            <div class="mb-3">
+                <input asp-for="nombre" placeholder="Ingrese su nombre"
+                       class="form-control bg-secondary text-light border-1 border-secondary" />
+            </div>
+            <div class="mb-3">
+                <input asp-for="apellido" placeholder="Ingrese su apellido"
+                       class="form-control bg-secondary text-light border-1 border-secondary" />
+            </div>
+            <div class="mb-3">
+                <input type="password" asp-for="pass" placeholder="Ingrese la contraseña"
+                       class="form-control bg-secondary text-light border-1 border-secondary" />
+            </div>
+
+            <button type="submit" class="btn btn-info w-100">📝 Registrar</button>
+        </form>
+
+        <div class="mt-3 text-center">
+            <a asp-action="Login" class="text-info text-decoration-none">🔑 ¿Ya tenés cuenta? Inicia sesión</a>
+        </div>
+    </div>
 </div>
+
+<style>
+    .form-control {
+        background-color: #2a2a2a;
+        color: #f0f0f0;
+        border: 1px solid #444;
+    }
+
+    /* placeholder visible */
+    .form-control::placeholder {
+        color: #ccc;
+        opacity: 1;
+    }
+
+    .form-control:focus {
+        border-color: #17a2b8;
+        box-shadow: 0 0 0 0.25rem rgba(23,162,184,0.25);
+    }
+
+    .btn-info {
+        background-color: #17a2b8;
+        border-color: #17a2b8;
+        color: #fff;
+    }
+
+    .btn-info:hover {
+        background-color: #138496;
+        border-color: #138496;
+    }
+
+    a.text-info:hover {
+        color: #0dcaf0;
+    }
+</style>

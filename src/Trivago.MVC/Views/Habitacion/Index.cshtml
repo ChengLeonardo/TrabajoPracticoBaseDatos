@@ -1,16 +1,24 @@
-@model Trivago.MVC.Models.HabitacionViewModel;
+@model Trivago.MVC.Models.HabitacionViewModel
+
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Habitaciones";
 }
 
-<h1>@ViewData["Title"]</h1>
-<a asp-action="PostForm">Agregar habitacion</a>
-@foreach(var habitacion in Model.habitacionGetViewModel.Habitaciones)
-{
-<div class="row">
-    <div class="col">
-        <a asp-action="Detalle" asp-route-id="@habitacion.idHabitacion">@habitacion.tipoHabitacion.Nombre</a>
+<div class="container my-5 text-light bg-dark p-4 rounded-4 shadow-lg border border-secondary">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="text-info mb-0">@ViewData["Title"]</h1>
+        <a asp-action="PostForm" class="btn btn-success btn-sm">➕ Agregar habitación</a>
+    </div>
+
+    <div class="list-group">
+        @foreach (var habitacion in Model.habitacionGetViewModel.Habitaciones)
+        {
+            <a class="list-group-item list-group-item-action bg-dark text-light border-secondary hover-overlay"
+               asp-action="Detalle"
+               asp-route-id="@habitacion.idHabitacion">
+                🛏️ @habitacion.tipoHabitacion.Nombre
+            </a>
+        }
     </div>
 </div>
-}
 

@@ -1,16 +1,22 @@
-@model Trivago.MVC.Models.PaisViewModel;
+@model Trivago.MVC.Models.PaisViewModel
+
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Países";
 }
 
-<h1>@ViewData["Title"]</h1>
-<a asp-action="PostForm">Agregar pais</a>
-@foreach(var pais in Model.paisGetViewModel.Paises)
-{
-<div class="row">
-    <div class="col">
-        <a asp-action="Detalle" asp-route-id="@pais.idPais">@pais.Nombre</a>
+<div class="container my-5 text-light">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="text-info mb-0">@ViewData["Title"]</h1>
+        <a asp-action="PostForm" class="btn btn-success btn-sm">➕ Agregar país</a>
+    </div>
+
+    <div class="list-group">
+        @foreach(var pais in Model.paisGetViewModel.Paises)
+        {
+            <a class="list-group-item list-group-item-action bg-dark text-light border-secondary hover-overlay"
+               asp-action="Detalle" asp-route-id="@pais.idPais">
+                🌍 @pais.Nombre
+            </a>
+        }
     </div>
 </div>
-}
-

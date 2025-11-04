@@ -19,7 +19,7 @@ public class HabitacionPostViewModel
 {
     public SelectList tipoHabitaciones { get; set; }
     public SelectList hoteles { get; set;  }
-    public decimal PrecioPorNoche { get; set; }
+    public decimal? PrecioPorNoche { get; set; }
 
     public uint? IdHotelSeleccionado { get; set; }
     public uint? IdTipoHabitacionSeleccionado { get; set; }
