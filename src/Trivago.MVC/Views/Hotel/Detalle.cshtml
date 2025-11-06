@@ -28,8 +28,11 @@
 
     <div class="d-flex gap-3">
         <a asp-action="Index" class="btn btn-outline-light btn-sm">🏨 Mostrar hoteles</a>
-        <a asp-action="PostForm" class="btn btn-success btn-sm">➕ Agregar hotel</a>
-        <a asp-controller="Habitacion" asp-action="PostForm" asp-route-idHotel="@Model.idHotel" class="btn btn-primary btn-sm">➕ Agregar habitación</a>
+        @if(User.IsInRole("Admin"))
+        {
+            <a asp-action="PostForm" class="btn btn-success btn-sm">➕ Agregar hotel</a>
+            <a asp-controller="Habitacion" asp-action="PostForm" asp-route-idHotel="@Model.idHotel" class="btn btn-primary btn-sm">➕ Agregar habitación</a>
+        }
     </div>
 </div>
 

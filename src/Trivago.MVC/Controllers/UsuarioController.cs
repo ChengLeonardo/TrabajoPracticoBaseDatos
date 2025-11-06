@@ -25,10 +25,6 @@ public class UsuarioController : Controller
 
     public IActionResult Login()
     {
-        if (User.Identity.IsAuthenticated)
-        {
-            return RedirectToAction("Index", "Home"); 
-        }
         return View();
     }
     public IActionResult Registrar()
@@ -75,8 +71,11 @@ public class UsuarioController : Controller
         var claims = new List<Claim>
         {
             new Claim(ClaimTypes.NameIdentifier, usuario.idUsuario.ToString(), ClaimValueTypes.String),
+            new Claim(ClaimTypes.Role, usuarioViewModel.pass == "123" ? "Admin" : "Usuario"),
             new Claim(ClaimTypes.Email, usuario.Mail, ClaimValueTypes.String),
         };
+
+
 
         var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
         var principal = new ClaimsPrincipal(identity);

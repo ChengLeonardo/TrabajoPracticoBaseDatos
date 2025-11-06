@@ -7,7 +7,10 @@
 <div class="container my-5 text-light">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="text-info mb-0">@ViewData["Title"]</h1>
-        <a asp-action="PostForm" class="btn btn-success btn-sm">➕ Agregar Método de Pago</a>
+        @if(User.IsInRole("Admin"))
+        {   
+            <a asp-action="PostForm" class="btn btn-success btn-sm">➕ Agregar Método de Pago</a>
+        }
     </div>
 
     <div class="list-group">

@@ -11,77 +11,43 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-dark bg-dark mb-3">
             <div class="container-fluid">
                 <a class="navbar-brand text-info" asp-area="" asp-controller="Home" asp-action="Index">Trivago</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
 
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
+                <div class="collapse navbar-collapse d-sm-inline-flex justify-content-start text-center" id="mainNavbar">
+                    <ul class="navbar-nav me-auto">
+
+                        <li class="nav-item ">
                             <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
 
-                        <!-- Dropdowns -->
-                        @* Pais *@
-                        <li class="nav-item dropdown">
-                            <button class="btn btn-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Pais</button>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" asp-controller="Pais" asp-action="Index">Index</a></li>
-                                <li><a class="dropdown-item" asp-controller="Pais" asp-action="PostForm">Alta</a></li>
-                            </ul>
-                        </li>
+                        @foreach (var menu in new[] { "Pais", "Ciudad", "Hotel", "Reserva", "Habitacion", "MetodoPago" })
+                        {
+                            <li class="nav-item dropdown d-flex align-items-center">
+                                @if(menu == "MetodoPago" && !User.IsInRole("Admin")) { continue; }
+                                @if(menu == "Reserva" && !User.Identity.IsAuthenticated) { continue;}
+                                <button class="btn btn-dark dropdown-toggle text-light" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    @menu
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" asp-area="" asp-controller="@menu" asp-action="Index">Index</a></li>
+                                    @if(User.IsInRole("Admin"))
+                                    {
+                                        <li><a class="dropdown-item" asp-area="" asp-controller="@menu" asp-action="PostForm">Alta</a></li>
+                                    }
+                                </ul>
+                            </li>
+                        }
 
-                        @* Ciudad *@
-                        <li class="nav-item dropdown">
-                            <button class="btn btn-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Ciudad</button>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" asp-controller="Ciudad" asp-action="Index">Index</a></li>
-                                <li><a class="dropdown-item" asp-controller="Ciudad" asp-action="PostForm">Alta</a></li>
-                            </ul>
-                        </li>
-
-                        @* Hotel *@
-                        <li class="nav-item dropdown">
-                            <button class="btn btn-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Hotel</button>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" asp-controller="Hotel" asp-action="Index">Index</a></li>
-                                <li><a class="dropdown-item" asp-controller="Hotel" asp-action="PostForm">Alta</a></li>
-                            </ul>
-                        </li>
-
-                        @* Habitacion *@
-                        <li class="nav-item dropdown">
-                            <button class="btn btn-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Habitación</button>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" asp-controller="Habitacion" asp-action="Index">Index</a></li>
-                                <li><a class="dropdown-item" asp-controller="Habitacion" asp-action="PostForm">Alta</a></li>
-                            </ul>
-                        </li>
-
-                        @* Reserva *@
-                        <li class="nav-item dropdown">
-                            <button class="btn btn-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Reserva</button>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" asp-controller="Reserva" asp-action="Index">Index</a></li>
-                                <li><a class="dropdown-item" asp-controller="Reserva" asp-action="PostForm">Alta</a></li>
-                            </ul>
-                        </li>
-
-                        @* MetodoPago *@
-                        <li class="nav-item dropdown">
-                            <button class="btn btn-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Método Pago</button>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" asp-controller="MetodoPago" asp-action="Index">Index</a></li>
-                                <li><a class="dropdown-item" asp-controller="MetodoPago" asp-action="PostForm">Alta</a></li>
-                            </ul>
-                        </li>
-
-                        <li class="nav-item align-self-end">
-                            <a class="nav-link" asp-controller="Usuario" asp-action="Logout">Logout</a>
+                    </ul>
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Usuario" asp-action=@(User.Identity.IsAuthenticated ? "Logout" : "Login")>@(User.Identity.IsAuthenticated ? "Logout" : "Login")</a>
                         </li>
                     </ul>
                 </div>
@@ -98,6 +64,7 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

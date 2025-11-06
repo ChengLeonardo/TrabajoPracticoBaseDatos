@@ -26,7 +26,10 @@
 
     <div class="d-flex gap-3">
         <a asp-action="Index" class="btn btn-outline-light btn-sm">🔙 Mostrar países</a>
-        <a asp-action="PostForm" class="btn btn-success btn-sm">➕ Agregar país</a>
-        <a asp-controller="Ciudad" asp-action="PostForm" asp-route-idPais="@Model.idPais" class="btn btn-primary btn-sm">➕ Agregar ciudad</a>
+        @if(User.IsInRole("Admin"))
+        {
+            <a asp-action="PostForm" class="btn btn-success btn-sm">➕ Agregar país</a>
+            <a asp-controller="Ciudad" asp-action="PostForm" asp-route-idPais="@Model.idPais" class="btn btn-primary btn-sm">➕ Agregar ciudad</a>
+        }
     </div>
 </div>

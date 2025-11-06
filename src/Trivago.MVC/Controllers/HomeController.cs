@@ -11,7 +11,8 @@ using System.IO.Compression;
 using Microsoft.AspNetCore.Authorization;
 
 namespace Trivago.MVC.Controllers;
-[Authorize]
+
+
 public class HomeController : Controller
 {
     private readonly IRepoPaisAsync _repoPaisAsync;
@@ -27,6 +28,7 @@ public class HomeController : Controller
         _repoHotelAsync = repoHotelAsync;
     }
     
+
     [HttpGet]
     public async Task<IActionResult> Index()
     {
@@ -78,9 +80,9 @@ public class HomeController : Controller
             case "Pais":
                 return RedirectToAction("Detalle", "Pais", new { id });
             case "Ciudad":
-                return RedirectToAction("Detalle", "Ciudad",  new { id });
+                return RedirectToAction("Detalle", "Ciudad", new { id });
             case "Hotel":
-                return RedirectToAction("Detalle", "Hotel",  new { id });
+                return RedirectToAction("Detalle", "Hotel", new { id });
         }
         return View(homeViewModel);
     }
@@ -94,5 +96,11 @@ public class HomeController : Controller
     public IActionResult Error()
     {
         return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+    }
+    
+    [AllowAnonymous]
+    public IActionResult AccessDenied()
+    {
+        return View();
     }
 }

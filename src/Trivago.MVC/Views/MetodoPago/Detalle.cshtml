@@ -1,6 +1,6 @@
+@using Microsoft.AspNetCore.Authorization
 @using Trivago.Core.Ubicacion
 @model Trivago.Core.Ubicacion.MetodoPago
-
 @{
     ViewData["Title"] = "Detalle de MetodoPago";
 }
@@ -25,7 +25,10 @@
 
     <div class="d-flex gap-3">
         <a asp-action="Index" class="btn btn-outline-light btn-sm">🔙 Mostrar Metodo Pago</a>
-        <a asp-action="PostForm" class="btn btn-success btn-sm">➕ Agregar Metodo Pago</a>
+        @if(User.IsInRole("Admin"))
+        {
+            <a asp-action="PostForm" class="btn btn-success btn-sm">➕ Agregar Metodo Pago</a>
+        }
     </div>
 </div>
 

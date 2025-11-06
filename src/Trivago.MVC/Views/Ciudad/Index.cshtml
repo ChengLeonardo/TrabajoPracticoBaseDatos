@@ -7,7 +7,10 @@
 <div class="container my-5 text-light bg-dark p-4 rounded-4 shadow-lg border border-secondary">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="text-info mb-0">@ViewData["Title"]</h1>
-        <a asp-action="PostForm" class="btn btn-success btn-sm">➕ Agregar ciudad</a>
+        @if(User.IsInRole("Admin"))
+        {
+            <a asp-action="PostForm" class="btn btn-success btn-sm">➕ Agregar ciudad</a>
+        }
     </div>
 
     <div class="list-group">

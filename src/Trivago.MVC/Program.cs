@@ -37,6 +37,7 @@ builder.Services.AddAuthentication(options =>
     // Configure cookie settings like login path, etc.
     options.LoginPath = "/Usuario/Login"; 
     options.LogoutPath = "/Usuario/Logout";
+    options.AccessDeniedPath = "/Home/AccessDenied";
 });
 
 builder.Services.AddAuthorization();

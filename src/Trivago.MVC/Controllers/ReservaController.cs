@@ -33,7 +33,10 @@ public class ReservaController : Controller
     public async Task<IActionResult> Index()
     {
         var reservas = await _repoReservaAsync.ListarAsync();
-        reservas = reservas.Where(r => r.idUsuario == Convert.ToUInt32(User.FindFirst(ClaimTypes.NameIdentifier).Value)).ToList();
+        if (User.IsInRole("Usuario"))
+        {
+            reservas = reservas.Where(r => r.idUsuario == Convert.ToUInt32(User.FindFirst(ClaimTypes.NameIdentifier).Value)).ToList();
+        }
         ReservaGetViewModel reservaGetViewModel = new()
         {
             Reservas = reservas
@@ -44,7 +47,7 @@ public class ReservaController : Controller
         };
         return View(reservaViewModel);
     }
-
+    [Authorize(Roles = "Admin")]
     [HttpGet]
     public async Task<IActionResult> PostForm(uint? idHabitacion = 0)
     {
@@ -62,7 +65,7 @@ public class ReservaController : Controller
         };
         return View(reservaViewModel);
     }
-
+    [Authorize(Roles = "Admin")]
     [HttpPost]
     public async Task<IActionResult> PostForm(ReservaViewModel reservaViewModel)
     {

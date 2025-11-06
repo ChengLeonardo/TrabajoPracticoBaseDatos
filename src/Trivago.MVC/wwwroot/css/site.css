@@ -72,6 +72,11 @@ a.text-info:hover, a:hover {
     background-color: #1e1e1e;
     color: #f0f0f0;
 }
+.navbar .dropdown-toggle {
+    border: none !important;
+    box-shadow: none !important;
+    background-color: transparent !important;
+}
 
 .dropdown-menu a {
     color: #f0f0f0;

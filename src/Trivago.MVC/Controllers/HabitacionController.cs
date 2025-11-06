@@ -14,7 +14,7 @@ using Trivago.MVC.Models;
 
 namespace Trivago.MVC.Controllers;
 
-[Authorize]
+
 public class HabitacionController : Controller
 {
     private readonly IRepoHabitacionAsync _repoHabitacionAsync;
@@ -32,6 +32,7 @@ public class HabitacionController : Controller
         _repoTipoHabitacionAsync = repoTipoHabitacionAsync;
     }
 
+
     public async Task<IActionResult> Index()
     {
         HabitacionGetViewModel habitacionGetViewModel = new()
@@ -44,7 +45,7 @@ public class HabitacionController : Controller
         };
         return View(habitacionViewModel);
     }
-    
+    [Authorize(Roles = "Admin")]
     [HttpGet]
     public async Task<IActionResult> PostForm(uint? idHotel = 0, uint? idTipo = 0)
     {
@@ -63,7 +64,7 @@ public class HabitacionController : Controller
         };
         return View(habitacionViewModel);
     }
-
+    [Authorize(Roles = "Admin")]
     [HttpPost]
     public async Task<IActionResult> PostForm(HabitacionViewModel habitacionViewModel)
     {
@@ -72,7 +73,7 @@ public class HabitacionController : Controller
         {
             hotel = new() { idHotel = (uint)habitacionViewModel.habitacionPostViewModel.IdHotelSeleccionado },
             PrecioPorNoche = (decimal)habitacionViewModel.habitacionPostViewModel.PrecioPorNoche,
-            tipoHabitacion = new() { idTipo = (uint)habitacionViewModel.habitacionPostViewModel.IdHotelSeleccionado}
+            tipoHabitacion = new() { idTipo = (uint)habitacionViewModel.habitacionPostViewModel.IdTipoHabitacionSeleccionado}
         };
         var id = await _repoHabitacionAsync.AltaAsync(habitacion);
         var habitaciones = await _repoHabitacionAsync.ListarAsync();

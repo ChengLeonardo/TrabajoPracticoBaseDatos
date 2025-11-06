@@ -15,24 +15,26 @@
         </div>
     </div>
 
-    <h4 class="mb-3">Comentarios</h4>
+    <h4 class="mb-3">Comentarios:</h4>
+    @if(User.Identity.IsAuthenticated)
+    {
+        <form asp-action="Comentar" method="post" class="mb-4">
+            <input type="hidden" name="idHabitacion" value="@Model.idHabitacion" />
 
-    <form asp-action="Comentar" method="post" class="mb-4">
-        <input type="hidden" name="idHabitacion" value="@Model.idHabitacion" />
+            <div class="mb-3">
+                <label class="form-label text-light">Puntuación (1–10)</label>
+                <input type="number" name="Calificacion" min="1" max="10" class="form-control bg-secondary text-light border-0" />
+            </div>
 
-        <div class="mb-3">
-            <label class="form-label text-light">Puntuación (1–10)</label>
-            <input type="number" name="Calificacion" min="1" max="10" class="form-control bg-secondary text-light border-0" />
-        </div>
+            <div class="mb-3">
+                <label class="form-label text-light">Comentario</label>
+                <textarea name="Texto" class="form-control bg-secondary text-light border-0" rows="3"></textarea>
+            </div>
 
-        <div class="mb-3">
-            <label class="form-label text-light">Comentario</label>
-            <textarea name="Texto" class="form-control bg-secondary text-light border-0" rows="3"></textarea>
-        </div>
-
-        <button type="submit" class="btn btn-primary">💬 Enviar</button>
-    </form>
-
+            <button type="submit" class="btn btn-primary">💬 Enviar</button>
+        </form>
+        
+    }
     <div class="list-group mb-4">
         @foreach (var comentario in Model.Comentarios)
         {
@@ -47,7 +49,10 @@
 
     <div class="d-flex gap-3">
         <a asp-action="Index" class="btn btn-outline-light btn-sm">🛏️ Mostrar habitaciones</a>
-        <a asp-action="PostForm" class="btn btn-success btn-sm">➕ Agregar habitación</a>
-        <a asp-controller="Reserva" asp-action="PostForm" asp-route-idHabitacion="@Model.idHabitacion" class="btn btn-primary btn-sm">📅 Agregar reserva</a>
+        @if(User.IsInRole("Admin"))
+        {
+            <a asp-action="PostForm" class="btn btn-success btn-sm">➕ Agregar habitación</a>
+            <a asp-controller="Reserva" asp-action="PostForm" asp-route-idHabitacion="@Model.idHabitacion" class="btn btn-primary btn-sm">📅 Agregar reserva</a>
+        }
     </div>
 </div>

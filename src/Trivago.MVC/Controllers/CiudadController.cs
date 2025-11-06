@@ -14,7 +14,6 @@ using Trivago.RepoDapper;
 
 namespace Trivago.MVC.Controllers
 {
-    [Authorize]
     public class CiudadController : Controller
     {
         private readonly IRepoCiudadAsync _repoCiudadAsync;
@@ -27,7 +26,6 @@ namespace Trivago.MVC.Controllers
             _repoPaisAsync = repoPaisAsync;
             _repoCiudadAsync = repoCiudadAsync;
         }
-
         public async Task<IActionResult> Index()
         {
             CiudadGetViewModel ciudadGetViewModel = new()
@@ -40,7 +38,7 @@ namespace Trivago.MVC.Controllers
             };
             return View(ciudadViewModel);
         }
-
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<IActionResult> PostForm(uint? idPais = 0)
         {
@@ -54,7 +52,7 @@ namespace Trivago.MVC.Controllers
             Console.WriteLine(idPais);
             return View(ciudadViewModel);
         }
-
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> PostForm(CiudadViewModel ciudadViewModel)
         {
