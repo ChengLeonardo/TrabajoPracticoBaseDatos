@@ -17,6 +17,7 @@ public class RepoUsuarioAsync : RepoDapper, IRepoUsuarioAsync
 
         var parametros = new DynamicParameters();
         parametros.Add("p_Nombre", usuario.Nombre);
+        parametros.Add("p_idRol", usuario.idRol);
         parametros.Add("p_Apellido", usuario.Apellido);
         parametros.Add("p_Mail", usuario.Mail);
         parametros.Add("p_Contrasena", usuario.Contrasena);
@@ -29,23 +30,33 @@ public class RepoUsuarioAsync : RepoDapper, IRepoUsuarioAsync
     }
     public async Task<Usuario?> DetalleAsync(uint id)
     {
-        string sql = @" select * from Usuario
-                        where idUsuario = @Id
-                        LIMIT 1;
 
-                        select * from Reserva
-                        Where idUsuario = @Id;
-                        ";
-        using ( var multi = await _conexion.QueryMultipleAsync(sql, new { Id = id }))
-        {
-            var Usuario = await multi.ReadSingleOrDefaultAsync<Usuario>();
-            if (Usuario != null)
+                string sql = @"
+                SELECT                     
+                    -- columnas de Usuario
+                    u.idUsuario, u.Nombre, u.Apellido, u.Email, u.Contrasena,
+                    r.Nombre,
+                    re.idReserva
+                FROM Usuario u
+                INNER JOIN Rol r ON u.idRol = r.idRol
+                INNER JOIN Reserva re ON u.idUsuario = re.idUsuario 
+                WHERE u.idUsuario = @Id;
+            ";
+
+        var resultado = await _conexion.QueryAsync<Usuario, Rol, List<Reserva>, Usuario>(
+            sql,
+            (u, r, re) =>
             {
-                var Reservas = await multi.ReadAsync<Reserva>();
-                Usuario.Reservas = Reservas.ToList();
-            }
-            return Usuario;
-        }
+                u.Rol = r;
+                u.Reservas = re;
+                return u;
+            },
+            new { Id = id },
+            splitOn: "idRol, idReserva" // 👈 debe coincidir EXACTAMENTE con las columnas del SELECT
+        );
+
+            return resultado.SingleOrDefault();
+        
     }
 
     public async Task<List<Usuario>> ListarAsync()
@@ -63,7 +74,7 @@ public class RepoUsuarioAsync : RepoDapper, IRepoUsuarioAsync
         if(correcto == 1)
         {
             sql = "Select * from Usuario where Mail = @mail";
-            resultado = await _conexion.QuerySingleAsync<Usuario>(sql, new { mail = email});
+            resultado = await DetalleAsync(resultado.idUsuario);
         }
         return resultado;
     }

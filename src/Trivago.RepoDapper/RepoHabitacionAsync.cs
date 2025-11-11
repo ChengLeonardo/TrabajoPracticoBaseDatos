@@ -34,17 +34,18 @@ public async Task<Habitacion?> DetalleAsync(uint id)
 {
     // 1️⃣ primer query: Habitacion + TipoHabitacion
     string sqlHabitacion = @"
-        SELECT h.*, t.idTipo, t.Nombre
+        SELECT h.*, t.idTipo, t.Nombre, ho.idHotel, ho.Nombre
         FROM Habitacion h
+        Inner join Hotel ho on h.idHotel = ho.idHotel
         INNER JOIN TipoHabitacion t ON h.idTipo = t.idTipo
         WHERE h.idHabitacion = @Id;
     ";
 
-    var habitacion = (await _conexion.QueryAsync<Habitacion, TipoHabitacion, Habitacion>(
+    var habitacion = (await _conexion.QueryAsync<Habitacion, TipoHabitacion, Hotel, Habitacion>(
         sqlHabitacion,
-        (h, t) => { h.tipoHabitacion = t; return h; },
+        (h, t, ho) => { h.tipoHabitacion = t; h.hotel = ho; return h; },
         new { Id = id },
-        splitOn: "idTipo"
+        splitOn: "idTipo,idHotel"
     )).SingleOrDefault();
 
     if (habitacion is null)

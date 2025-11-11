@@ -89,7 +89,9 @@ CREATE TABLE IF NOT EXISTS `5to_Trivago`.`Habitacion` (
   `idHabitacion` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `idHotel` INT UNSIGNED NOT NULL,
   `idTipo` INT UNSIGNED NOT NULL,
+  `nroHabitacion` INT UNSIGNED NOT NULL,
   `PrecioPorNoche` DECIMAL UNSIGNED NULL,
+  UNIQUE(`idHotel`,`idTipo`, `nroHabitacion`),
   PRIMARY KEY (`idHabitacion`, `idHotel`),
   INDEX `fk_Habitacion_Hotel1_idx` (`idHotel` ASC) ,
   INDEX `fk_Habitacion_TipoHanbitacion1_idx` (`idTipo` ASC) ,
@@ -116,6 +118,15 @@ CREATE TABLE IF NOT EXISTS `5to_Trivago`.`MetodoPago` (
   UNIQUE INDEX `TipoMedioPago_UNIQUE` (`TipoMedioPago` ASC) )
 ;
 
+
+drop Table if exists `5to_Trivago`.`Rol` ;
+
+CREATE Table if not EXISTS `5to_Trivago`.`Rol`(
+  `idRol` int UNSIGNED not NULL AUTO_INCREMENT,
+  `Nombre` VARCHAR(20) not NULL,
+  PRIMARY KEY (`idRol`)
+);
+
 -- -----------------------------------------------------
 -- Table `5to_Trivago`.`Usuario`
 -- -----------------------------------------------------
@@ -123,12 +134,17 @@ DROP TABLE IF EXISTS `5to_Trivago`.`Usuario` ;
 
 CREATE TABLE IF NOT EXISTS `5to_Trivago`.`Usuario` (
   `idUsuario` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `idRol` Int UNSIGNED not NULL,
   `Nombre` VARCHAR(45) NOT NULL,
   `Apellido` VARCHAR(45) NOT NULL,
   `Mail` VARCHAR(60) NOT NULL,
   `Contrasena` CHAR(64) NOT NULL,
   PRIMARY KEY (`idUsuario`),
-  UNIQUE INDEX `Mail_UNIQUE` (`Mail` ASC)
+  UNIQUE INDEX `Mail_UNIQUE` (`Mail` ASC),
+  INDEX `fk_Usuario_Rol_idx` (`idRol` ASC) ,
+  CONSTRAINT `fk_Usuario_Rol`
+    FOREIGN KEY (`idRol`)
+    REFERENCES `5to_Trivago`.`Rol` (`idRol`)
 )
 ;
 

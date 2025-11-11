@@ -19,11 +19,13 @@ namespace Trivago.MVC.Controllers
     {
         private readonly IRepoHotelAsync _repoHotelAsync;
         private readonly IRepoPaisAsync _repoPaisAsync;
+        private readonly IRepoHabitacionAsync _repoHabitacionAsync;
         private readonly IRepoCiudadAsync _repoCiudadAsync;
         private readonly ILogger<HotelController> _logger;
 
-        public HotelController(ILogger<HotelController> logger, IRepoHotelAsync repoHotelAsync, IRepoPaisAsync repoPaisAsync, IRepoCiudadAsync repoCiudadAsync)
+        public HotelController(ILogger<HotelController> logger, IRepoHotelAsync repoHotelAsync, IRepoPaisAsync repoPaisAsync, IRepoCiudadAsync repoCiudadAsync, IRepoHabitacionAsync repoHabitacionAsync)
         {
+            _repoHabitacionAsync = repoHabitacionAsync;
             _logger = logger;
             _repoPaisAsync = repoPaisAsync;
             _repoCiudadAsync = repoCiudadAsync;
@@ -88,6 +90,7 @@ namespace Trivago.MVC.Controllers
             else
             {
                 var hotel = await _repoHotelAsync.DetalleAsync(id.Value);
+                hotel.Habitaciones.ForEach(async h => h.tipoHabitacion = (await _repoHabitacionAsync.DetalleAsync(h.idHabitacion)).tipoHabitacion);
                 return View(hotel);
             }
         }

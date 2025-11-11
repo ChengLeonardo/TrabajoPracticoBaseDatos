@@ -45,15 +45,20 @@ call insert_metodo_pago('VisaDebito', @idVisaDebito);
 -- delete from MetodoPago
 -- where idMetodoPago in (1, 2, 3);
 
-call insert_usuario('Leonardo', 'Cheng', 'leonardocheng@gmail.com', '123', @idUsuarioLeonardoCheng);
-call insert_usuario('Mario', 'Rojas', 'mariorojas@gmail.com', '321', @idUsuarioMarioRojas);
-call insert_usuario('Luz', 'Ibarra', 'luzibarra@gmail.com', '231', @idUsuarioLuzIbarra);
+call insert_rol('Admin', @idRolAdmin);
+call insert_rol('Hotel', @idRolHotel);
+call insert_rol('Cliente', @idRolCliente);
+
+
+call insert_usuario('Leonardo', @idRolAdmin, 'Cheng', 'leonardocheng@gmail.com', '123', @idUsuarioLeonardoCheng);
+call insert_usuario('Mario', @idRolHotel, 'Rojas', 'mariorojas@gmail.com', '321', @idUsuarioMarioRojas);
+call insert_usuario('Luz', @idRolCliente, 'Ibarra', 'luzibarra@gmail.com', '231', @idUsuarioLuzIbarra);
 
 -- delete from Usuario
 -- where idUsuario in (1, 2, 3);
 
-call insert_reserva(@idHabitacionHotelBuenosAiresSuite1, @idMercadoPago, @idUsuarioLeonardoCheng, '2024-11-03', now(), 11111111, @idReservaLeonardoChengHabitacionHotelBuenosAiresSuite1);
-call insert_reserva(@idHabitacionHotelMendozaJuniorSuite1, @idEfectivo, @idUsuarioMarioRojas, '2024-11-04', '2024-12-02', 11111112, @idReservaMarioRojasHabitacionHotelBuenosAiresSuite1);
+call insert_reserva(@idHabitacionHotelBuenosAiresSuite1, @idMercadoPago, @idUsuarioLuzIbarra, '2024-11-03', now(), 11111111, @idReservaLeonardoChengHabitacionHotelBuenosAiresSuite1);
+call insert_reserva(@idHabitacionHotelMendozaJuniorSuite1, @idEfectivo, @idUsuarioLuzIbarra, '2024-11-04', '2024-12-02', 11111112, @idReservaMarioRojasHabitacionHotelBuenosAiresSuite1);
 call insert_reserva(@idHabitacionHotelSantiagodelEsteroGranSuite1, @idVisaDebito, @idUsuarioLuzIbarra, '2024-12-04', '2025-01-03', 11111113, @idReservaLuzIbarraHabitacionHotelBuenosAiresSuite1);
 
 -- delete from Reserva

@@ -43,7 +43,8 @@ public class UsuarioController : Controller
             Mail = usuarioViewModel.email,
             Nombre = usuarioViewModel.nombre,
             Contrasena = usuarioViewModel.pass,
-            Apellido = usuarioViewModel.apellido
+            Apellido = usuarioViewModel.apellido,
+            Rol = new() { idRol = 3 }
         };
         await _repoUsuarioAsync.AltaAsync(usuario);
                 var claims = new List<Claim>
@@ -71,7 +72,7 @@ public class UsuarioController : Controller
         var claims = new List<Claim>
         {
             new Claim(ClaimTypes.NameIdentifier, usuario.idUsuario.ToString(), ClaimValueTypes.String),
-            new Claim(ClaimTypes.Role, usuarioViewModel.pass == "123" ? "Admin" : "Usuario"),
+            new Claim(ClaimTypes.Role, usuario.Rol.Nombre),
             new Claim(ClaimTypes.Email, usuario.Mail, ClaimValueTypes.String),
         };
 

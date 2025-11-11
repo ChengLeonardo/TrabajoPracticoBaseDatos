@@ -115,14 +115,15 @@ DELIMITER //
 
 CREATE PROCEDURE insert_usuario(
   IN p_Nombre VARCHAR(45),
+  IN p_idRol int unsigned,
   IN p_Apellido VARCHAR(45),
   IN p_Mail VARCHAR(60),
   IN p_Contrasena CHAR(64),
   OUT p_idUsuario INT unsigned
 )
 BEGIN
-  INSERT INTO `Usuario` (`Nombre`, `Apellido`, `Mail`, `Contrasena`) 
-  VALUES (p_Nombre, p_Apellido, p_Mail, p_Contrasena);
+  INSERT INTO `Usuario` (`idRol`,`Nombre`, `Apellido`, `Mail`, `Contrasena`) 
+  VALUES (p_idRol, p_Nombre, p_Apellido, p_Mail, p_Contrasena);
   SET p_idUsuario = LAST_INSERT_ID();
 END //
 
@@ -166,6 +167,21 @@ CREATE PROCEDURE insert_comentario(
 BEGIN
   INSERT INTO `Comentario` (`idHabitacion`, `Comentario`, `Calificacion`, `Fecha`) VALUES (p_idHabitacion, p_Comentario, p_Calificacion, p_Fecha);
   set p_idComentario = last_insert_id();
+END //
+
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS insert_rol;
+
+DELIMITER //
+
+CREATE PROCEDURE insert_rol(
+  IN p_Nombre VARCHAR(20),
+  out p_idRol int unsigned
+)
+BEGIN
+  INSERT INTO `Rol` (`Nombre`) VALUES (p_Nombre);
+  set p_idRol = last_insert_id();
 END //
 
 DELIMITER ;
