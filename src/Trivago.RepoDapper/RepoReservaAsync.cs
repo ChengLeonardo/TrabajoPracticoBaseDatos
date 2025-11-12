@@ -17,7 +17,7 @@ public class RepoReservaAsync : RepoDapper, IRepoReservaAsync
 
         var parametros = new DynamicParameters();
         parametros.Add("p_idHabitacion", reserva.habitacion.idHabitacion);
-        parametros.Add("p_idMetododePago", reserva.metodoPago.idMetodoPago);
+        parametros.Add("p_idMetodoPago", reserva.metodoPago.idMetodoPago);
         parametros.Add("p_idUsuario", reserva.idUsuario);
         parametros.Add("p_Entrada", reserva.Entrada);
         parametros.Add("p_Salida", reserva.Salida);
@@ -35,7 +35,7 @@ public class RepoReservaAsync : RepoDapper, IRepoReservaAsync
         string sql = @"
             SELECT 
                 -- columnas de Reserva
-                r.idReserva, r.idHabitacion, r.idMetododePago, r.Entrada, r.Salida, r.Precio, r.Telefono,
+                r.idReserva, r.idHabitacion, r.idMetodoPago, r.Entrada, r.Salida, r.Precio, r.Telefono,
                 
                 -- columnas de Habitacion
                 h.idHabitacion, h.idHotel, h.PrecioPorNoche, h.idTipo,
@@ -48,7 +48,7 @@ public class RepoReservaAsync : RepoDapper, IRepoReservaAsync
             FROM Reserva r
             INNER JOIN Habitacion h ON r.idHabitacion = h.idHabitacion
             INNER JOIN TipoHabitacion t ON h.idTipo = t.idTipo
-            INNER JOIN MetodoPago m ON r.idMetododePago = m.idMetodoPago
+            INNER JOIN MetodoPago m ON r.idMetodoPago = m.idMetodoPago
             WHERE r.idReserva = @Id;
         ";
 
@@ -85,7 +85,7 @@ public class RepoReservaAsync : RepoDapper, IRepoReservaAsync
 
     public async Task<List<Reserva>> InformarReservasPorIdMetodoPagoAsync(uint idMetodoPago)
     {
-        string sql = "Select * from Reserva where idMetododePago = @Id";
+        string sql = "Select * from Reserva where idMetodoPago = @Id";
         var resultado = await  _conexion.QueryAsync<Reserva>(sql, new { Id = idMetodoPago});
         return resultado.ToList();
     }

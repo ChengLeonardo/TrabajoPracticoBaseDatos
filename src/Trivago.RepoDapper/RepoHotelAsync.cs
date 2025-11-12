@@ -36,26 +36,46 @@ public class RepoHotelAsync : RepoDapper, IRepoHotelAsync
     }
 
 
-    public async Task<Hotel?> DetalleAsync(uint id)
-    {
-                        string sql = @" select * from Hotel
-                        where idHotel = @Id
-                        LIMIT 1;
+public async Task<Hotel?> DetalleAsync(uint id)
+{
+    string sql = @"
+        SELECT 
+            ho.idHotel, ho.Nombre, ho.Direccion, ho.Telefono, ho.URL,
+            h.idHabitacion, h.idTipo, h.nroHabitacion, h.PrecioPorNoche,
+            t.idTipo, t.Nombre AS NombreTipo
+        FROM Hotel ho
+        INNER JOIN Habitacion h ON ho.idHotel = h.idHotel
+        INNER JOIN TipoHabitacion t ON h.idTipo = t.idTipo
+        WHERE ho.idHotel = @Id;
+    ";
 
-                        select * from Habitacion
-                        Where idHotel = @Id;
-                        ";
-        using ( var multi = await  _conexion.QueryMultipleAsync(sql, new { Id = id }))
+    var hotelDict = new Dictionary<uint, Hotel>();
+
+    var resultado = await _conexion.QueryAsync<Hotel, Habitacion, TipoHabitacion, Hotel>(
+        sql,
+        (ho, hab, tipo) =>
         {
-            var hotel = await  multi.ReadSingleOrDefaultAsync<Hotel>();
-            if (hotel != null)
+            if (!hotelDict.TryGetValue(ho.idHotel, out var hotelEntry))
             {
-                var Habitaciones = await  multi.ReadAsync<Habitacion>();
-                hotel.Habitaciones = Habitaciones.ToList();
+                hotelEntry = ho;
+                hotelEntry.Habitaciones = new List<Habitacion>();
+                hotelDict.Add(hotelEntry.idHotel, hotelEntry);
             }
-            return hotel;
-        }
-    }
+
+            // Asigna el tipo a la habitación
+            hab.tipoHabitacion = tipo;
+
+            // Agrega la habitación si no estaba
+            hotelEntry.Habitaciones.Add(hab);
+
+            return hotelEntry;
+        },
+        new { Id = id },
+        splitOn: "idHabitacion,idTipo"
+    );
+
+    return hotelDict.Values.SingleOrDefault();
+}
 
     public async Task<List<Hotel>> ListarAsync()
     {

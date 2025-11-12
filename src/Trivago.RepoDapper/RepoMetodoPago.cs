@@ -31,7 +31,7 @@ public class RepoMetodoPago : RepoDapper, IRepoMetodoPago
                         LIMIT 1;
 
                         select * from Reserva
-                        Where idMetododePago = @Id;
+                        Where idMetodoPago = @Id;
                         ";
         using ( var multi = _conexion.QueryMultiple(sql, new { Id = id }))
         {

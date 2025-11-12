@@ -17,6 +17,10 @@
 
     <h4 class="mb-3">Habitaciones</h4>
     <div class="list-group mb-4">
+    @if(Model.Habitaciones == null || Model.Habitaciones.Count == 0)
+    {
+        <p>n ohay habitaciojes</p>
+    }
         @foreach(var habitacion in Model.Habitaciones)
         {
             <a class="list-group-item list-group-item-action bg-dark text-light border-secondary hover-overlay"

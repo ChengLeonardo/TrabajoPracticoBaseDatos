@@ -90,7 +90,6 @@ namespace Trivago.MVC.Controllers
             else
             {
                 var hotel = await _repoHotelAsync.DetalleAsync(id.Value);
-                hotel.Habitaciones.ForEach(async h => h.tipoHabitacion = (await _repoHabitacionAsync.DetalleAsync(h.idHabitacion)).tipoHabitacion);
                 return View(hotel);
             }
         }

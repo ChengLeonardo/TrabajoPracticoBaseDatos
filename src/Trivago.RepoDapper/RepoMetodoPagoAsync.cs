@@ -33,7 +33,7 @@ public class RepoMetodoPagoAsync : RepoDapper, IRepoMetodoPagoAsync
                         LIMIT 1;
 
                         select * from Reserva
-                        Where idMetododePago = @Id;
+                        Where idMetodoPago = @Id;
                         ";
         using ( var multi = await _conexion.QueryMultipleAsync(sql, new { Id = id }))
         {

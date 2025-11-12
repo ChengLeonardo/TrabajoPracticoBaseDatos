@@ -16,7 +16,7 @@ public class RepoReserva : RepoDapper, IRepoReserva
 
         var parametros = new DynamicParameters();
         parametros.Add("p_idHabitacion", reserva.habitacion.idHabitacion);
-        parametros.Add("p_idMetododePago", reserva.metodoPago.idMetodoPago);
+        parametros.Add("p_idMetodoPago", reserva.metodoPago.idMetodoPago);
         parametros.Add("p_idUsuario", reserva.idUsuario);
         parametros.Add("p_Entrada", reserva.Entrada);
         parametros.Add("p_Salida", reserva.Salida);
@@ -51,7 +51,7 @@ public class RepoReserva : RepoDapper, IRepoReserva
 
     public List<Reserva> InformarReservasPorIdMetodoPago(uint idMetodoPago)
     {
-        string sql = "Select * from Reserva where idMetododePago = @Id";
+        string sql = "Select * from Reserva where idMetodoPago = @Id";
         var resultado = _conexion.Query<Reserva>(sql, new { Id = idMetodoPago}).ToList();
         return resultado;
     }

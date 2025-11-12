@@ -136,7 +136,7 @@ DELIMITER //
 
 CREATE PROCEDURE insert_reserva(
   IN p_idHabitacion INT UNSIGNED,
-  IN p_idMetododePago INT UNSIGNED,
+  IN p_idMetodoPago INT UNSIGNED,
   IN p_idUsuario INT UNSIGNED,
   IN p_Entrada DATETIME,
   IN p_Salida DATETIME,
@@ -144,8 +144,8 @@ CREATE PROCEDURE insert_reserva(
   out p_idReserva int unsigned
 )
 BEGIN
-  INSERT INTO `Reserva` (`idHabitacion`, `idMetododePago`, `idUsuario`, `Entrada`, `Salida`, `Precio`, `Telefono`)
-  select p_idHabitacion, p_idMetododePago, p_idUsuario, p_Entrada, p_Salida, H.PrecioPorNoche * (datediff(p_Salida, p_Entrada)), p_Telefono
+  INSERT INTO `Reserva` (`idHabitacion`, `idMetodoPago`, `idUsuario`, `Entrada`, `Salida`, `Precio`, `Telefono`)
+  select p_idHabitacion, p_idMetodoPago, p_idUsuario, p_Entrada, p_Salida, H.PrecioPorNoche * (datediff(p_Salida, p_Entrada)), p_Telefono
   from Habitacion H
   where idHabitacion = p_idHabitacion;
   set p_idReserva = last_insert_id();
