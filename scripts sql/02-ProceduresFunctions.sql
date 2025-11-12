@@ -2,27 +2,18 @@ use `5to_Trivago` ;
 SELECT 'Creando SF' AS 'Estado';
 delimiter $$
 
-drop function if exists verificacion_usuario$$
-create function verificacion_usuario(
-mail varchar(60),
-    contra char(64)
-)returns bool reads sql data
-begin
-declare correcto bool;
-if(
-exists(
-select *
-        from Usuario U
-        where U.Mail = mail and U.Contrasena = sha2(contra, 256)
+DROP PROCEDURE IF EXISTS obtener_usuario$$
+CREATE PROCEDURE obtener_usuario(
+    IN mail VARCHAR(60),
+    IN contra CHAR(64)
 )
-)
-then
-set correcto = true;
-else
-set correcto = false;
-end if;
-return correcto;
-end$$
+BEGIN
+    SELECT U.*, R.*
+    FROM Usuario U
+    INNER JOIN Rol R USING(idRol)
+    WHERE U.Mail = mail AND U.Contrasena = SHA2(contra, 256);
+END$$
+
 
 drop function if exists verificacion_mail_registrado$$
 create function verificacion_mail_registrado(unMail varchar(60))

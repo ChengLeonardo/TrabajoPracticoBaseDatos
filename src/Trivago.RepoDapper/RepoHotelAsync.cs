@@ -42,18 +42,20 @@ public async Task<Hotel?> DetalleAsync(uint id)
         SELECT 
             ho.idHotel, ho.Nombre, ho.Direccion, ho.Telefono, ho.URL,
             h.idHabitacion, h.idTipo, h.nroHabitacion, h.PrecioPorNoche,
-            t.idTipo, t.Nombre AS NombreTipo
+            t.idTipo, t.Nombre,
+            c.*
         FROM Hotel ho
         INNER JOIN Habitacion h ON ho.idHotel = h.idHotel
         INNER JOIN TipoHabitacion t ON h.idTipo = t.idTipo
+        inner join Ciudad c On ho.idCiudad = c.idCiudad
         WHERE ho.idHotel = @Id;
     ";
 
     var hotelDict = new Dictionary<uint, Hotel>();
 
-    var resultado = await _conexion.QueryAsync<Hotel, Habitacion, TipoHabitacion, Hotel>(
+    var resultado = await _conexion.QueryAsync<Hotel, Habitacion, TipoHabitacion, Ciudad, Hotel>(
         sql,
-        (ho, hab, tipo) =>
+        (ho, hab, tipo, ciudad) =>
         {
             if (!hotelDict.TryGetValue(ho.idHotel, out var hotelEntry))
             {
@@ -64,14 +66,14 @@ public async Task<Hotel?> DetalleAsync(uint id)
 
             // Asigna el tipo a la habitación
             hab.tipoHabitacion = tipo;
-
+            hotelEntry.ciudad = ciudad;
             // Agrega la habitación si no estaba
             hotelEntry.Habitaciones.Add(hab);
 
             return hotelEntry;
         },
         new { Id = id },
-        splitOn: "idHabitacion,idTipo"
+        splitOn: "idHabitacion,idTipo,idCiudad"
     );
 
     return hotelDict.Values.SingleOrDefault();

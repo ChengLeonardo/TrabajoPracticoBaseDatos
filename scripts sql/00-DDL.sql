@@ -80,7 +80,7 @@ CREATE TABLE `Habitacion` (
   `nroHabitacion` INT UNSIGNED NOT NULL,
   `PrecioPorNoche` DECIMAL(10,2) UNSIGNED NOT NULL,
   PRIMARY KEY (`idHabitacion`),
-  UNIQUE KEY `Habitacion_UNIQUE` (`idHotel`, `nroHabitacion`),
+  UNIQUE KEY `Habitacion_UNIQUE` (`idHotel`, `nroHabitacion`, `idTipo`),
   CONSTRAINT `fk_Habitacion_Hotel`
     FOREIGN KEY (`idHotel`)
     REFERENCES `Hotel` (`idHotel`)

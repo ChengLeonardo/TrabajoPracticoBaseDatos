@@ -52,7 +52,7 @@ public class RepoUsuarioAsync : RepoDapper, IRepoUsuarioAsync
                 return u;
             },
             new { Id = id },
-            splitOn: "idRol, idReserva" // 👈 debe coincidir EXACTAMENTE con las columnas del SELECT
+            splitOn: "idRol,idReserva" // 👈 debe coincidir EXACTAMENTE con las columnas del SELECT
         );
 
             return resultado.SingleOrDefault();
@@ -68,14 +68,8 @@ public class RepoUsuarioAsync : RepoDapper, IRepoUsuarioAsync
 
     public async Task<Usuario?> UsuarioPorPassAsync(string email, string pass)
     {
-        Usuario? resultado = null;
-        string sql = "Select verificacion_usuario(@mail, @Contrasena)";
-        var correcto = await _conexion.QuerySingleAsync<int>(sql, new { mail = email, Contrasena = pass});
-        if(correcto == 1)
-        {
-            sql = "Select * from Usuario where Mail = @mail";
-            resultado = await DetalleAsync(resultado.idUsuario);
-        }
-        return resultado;
+        string sql = "call obtener_usuario(@mail, @Contrasena);";
+        var resultado = await _conexion.QueryAsync<Usuario, Rol, Usuario>(sql, (u, r) => { u.Rol = r;  return u; }, new { mail = email, Contrasena = pass}, splitOn:"idRol");
+        return resultado.SingleOrDefault();
     }
 }

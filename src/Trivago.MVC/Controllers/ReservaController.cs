@@ -2,19 +2,20 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
+using MySqlConnector;
 using Trivago.Core.Persistencia;
 using Trivago.Core.Ubicacion;
 using Trivago.MVC.Models;
 
 namespace Trivago.MVC.Controllers;
 
-[Authorize]
 public class ReservaController : Controller
 {
     private readonly IRepoReservaAsync _repoReservaAsync;
@@ -30,6 +31,7 @@ public class ReservaController : Controller
         _repoMetodoPagoAsync = repoMetodoPagoAsync;
     }
 
+    [Authorize]
     public async Task<IActionResult> Index()
     {
         var reservas = await _repoReservaAsync.ListarAsync();
@@ -47,10 +49,11 @@ public class ReservaController : Controller
         };
         return View(reservaViewModel);
     }
-    [Authorize(Roles = "Admin")]
+    [Authorize]
     [HttpGet]
     public async Task<IActionResult> PostForm(uint? idHabitacion = 0)
     {
+
         var habitaciones = await _repoHabitacionAsync.ListarAsync();
         var metodoPagos = await _repoMetodoPagoAsync.ListarAsync();
         ReservaViewModel reservaViewModel = new()
@@ -65,11 +68,17 @@ public class ReservaController : Controller
         };
         return View(reservaViewModel);
     }
-    [Authorize(Roles = "Admin")]
+    [Authorize]
     [HttpPost]
     public async Task<IActionResult> PostForm(ReservaViewModel reservaViewModel)
     {
         var Precio = reservaViewModel.reservaPostViewModel.entrada.Subtract(reservaViewModel.reservaPostViewModel.salida);
+        try
+        {
+        if (Precio.Days < 0)
+        {
+            throw new Exception("Fecha fin no puede ser anterior que el inicio");
+        }
         var habitacion = await _repoHabitacionAsync.DetalleAsync((uint)reservaViewModel.reservaPostViewModel.IdHabitacionSeleccionado);
 
         Reserva reserva = new Reserva()
@@ -82,10 +91,30 @@ public class ReservaController : Controller
             Telefono = reservaViewModel.reservaPostViewModel.Telefono.Value,
             Precio = Precio.Days * habitacion.PrecioPorNoche
         };
-        var id = await _repoReservaAsync.AltaAsync(reserva);
+            var id = await _repoReservaAsync.AltaAsync(reserva);
+        }
+        catch (MySqlException ex)
+        {
+            ViewBag.Error = ex.Message;
+            return View(reservaViewModel);
+        }
+        catch (Exception ex)
+        {
+            if (ex != null)
+            {
+                ViewBag.Error = ex.Message;
+            }
+            else
+            {
+                ViewBag.Error = "Datos ingresados incorrectos";
+
+            }
+            return View(reservaViewModel);
+        }
         return RedirectToAction("Index");
     }
-
+    
+    [Authorize]
     [HttpGet]
     public async Task<IActionResult> Detalle(uint? id)
     {
@@ -96,6 +125,10 @@ public class ReservaController : Controller
         else
         {
             var reserva = await _repoReservaAsync.DetalleAsync(id.Value);
+            if (reserva.idUsuario != Convert.ToInt32(User.FindFirst(ClaimTypes.NameIdentifier)?.Value))
+            {
+                HttpContext.Response.StatusCode = StatusCodes.Status401Unauthorized;
+            }
             return View(reserva);
         }
     }

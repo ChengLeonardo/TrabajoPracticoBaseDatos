@@ -27,6 +27,10 @@ public class RepoCiudadAsync : RepoDapper, IRepoCiudadAsync
         string sql = @" select * from Ciudad
                         where idCiudad = @Id
                         LIMIT 1;
+                        
+                        select p.* from Ciudad c
+                        inner join Pais p on p.idPais = c.idPais
+                        where idCiudad = @Id;
 
                         select * from Hotel
                         Where idCiudad = @Id;
@@ -37,6 +41,8 @@ public class RepoCiudadAsync : RepoDapper, IRepoCiudadAsync
             if (ciudad != null)
             {
                 var Hoteles = await multi.ReadAsync<Hotel>();
+                var Pais = await multi.ReadAsync<Pais>();
+                ciudad.pais = Pais.SingleOrDefault();
                 ciudad.Hoteles = Hoteles.ToList();
             }
             return ciudad;

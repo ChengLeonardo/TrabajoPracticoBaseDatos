@@ -56,7 +56,7 @@
         @if(User.IsInRole("Admin"))
         {
             <a asp-action="PostForm" class="btn btn-success btn-sm">➕ Agregar habitación</a>
-            <a asp-controller="Reserva" asp-action="PostForm" asp-route-idHabitacion="@Model.idHabitacion" class="btn btn-primary btn-sm">📅 Agregar reserva</a>
         }
+            <a asp-controller="Reserva" asp-action="PostForm" asp-route-idHabitacion="@Model.idHabitacion" class="btn btn-primary btn-sm">📅 Agregar reserva</a>
     </div>
 </div>

@@ -44,21 +44,11 @@ public class UsuarioController : Controller
             Nombre = usuarioViewModel.nombre,
             Contrasena = usuarioViewModel.pass,
             Apellido = usuarioViewModel.apellido,
-            Rol = new() { idRol = 3 }
+            idRol = 3
         };
         await _repoUsuarioAsync.AltaAsync(usuario);
-                var claims = new List<Claim>
-        {
-            new Claim(ClaimTypes.NameIdentifier, usuario.idUsuario.ToString(), ClaimValueTypes.String),
-            new Claim(ClaimTypes.Email, usuario.Mail, ClaimValueTypes.String),
-        };
 
-        var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-        var principal = new ClaimsPrincipal(identity);
-
-        await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
-
-        return RedirectToAction("Index", "Home");
+        return await Login(usuarioViewModel);
     }
 
     [HttpPost]
