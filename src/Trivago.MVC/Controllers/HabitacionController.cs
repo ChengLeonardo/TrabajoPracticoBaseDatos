@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
+using MySqlConnector;
 using Trivago.Core.Persistencia;
 using Trivago.Core.Ubicacion;
 using Trivago.MVC.Models;
@@ -68,17 +69,28 @@ public class HabitacionController : Controller
     [HttpPost]
     public async Task<IActionResult> PostForm(HabitacionViewModel habitacionViewModel)
     {
-        
-        Habitacion habitacion = new Habitacion()
+        try
         {
-            hotel = new() { idHotel = (uint)habitacionViewModel.habitacionPostViewModel.IdHotelSeleccionado },
-            PrecioPorNoche = (decimal)habitacionViewModel.habitacionPostViewModel.PrecioPorNoche,
-            tipoHabitacion = new() { idTipo = (uint)habitacionViewModel.habitacionPostViewModel.IdTipoHabitacionSeleccionado}
-        };
-        var id = await _repoHabitacionAsync.AltaAsync(habitacion);
-        var habitaciones = await _repoHabitacionAsync.ListarAsync();
-        habitacionViewModel.habitacionGetViewModel.Habitaciones = habitaciones;
-        return View("Index", habitacionViewModel);
+            Habitacion habitacion = new Habitacion()
+            {
+                hotel = new() { idHotel = (uint)habitacionViewModel.habitacionPostViewModel.IdHotelSeleccionado },
+                PrecioPorNoche = (decimal)habitacionViewModel.habitacionPostViewModel.PrecioPorNoche,
+                tipoHabitacion = new() { idTipo = (uint)habitacionViewModel.habitacionPostViewModel.IdTipoHabitacionSeleccionado }
+            };
+            var id = await _repoHabitacionAsync.AltaAsync(habitacion);
+            var habitaciones = await _repoHabitacionAsync.ListarAsync();
+            habitacionViewModel.habitacionGetViewModel.Habitaciones = habitaciones;
+            return View("Index", habitacionViewModel);
+        }
+        catch (MySqlException ex)
+        {
+            var hoteles = await _repoHotelAsync.ListarAsync();
+            var tipoHabitaciones = await _repoTipoHabitacionAsync.ListarAsync();
+            habitacionViewModel.habitacionPostViewModel.hoteles = new SelectList(items: hoteles.ToList(), dataValueField: nameof(Hotel.idHotel), dataTextField: nameof(Hotel.Nombre), selectedValue: habitacionViewModel.habitacionPostViewModel.IdHotelSeleccionado);
+            habitacionViewModel.habitacionPostViewModel.tipoHabitaciones = new SelectList(items: tipoHabitaciones.ToList(), dataValueField: nameof(TipoHabitacion.idTipo), dataTextField: nameof(TipoHabitacion.Nombre), selectedValue: habitacionViewModel.habitacionPostViewModel.IdTipoHabitacionSeleccionado);
+            ViewBag.Error = "Precio fuera del rango";
+            return View(habitacionViewModel);
+        }
     }
 
     [HttpGet]

@@ -12,12 +12,15 @@
         <p><strong>Ciudad:</strong> @Model.ciudad.nombre</p>
         <p><strong>Nombre:</strong> @Model.Nombre</p>
         <p><strong>Teléfono:</strong> @Model.Telefono</p>
+        <p><strong>Email:</strong> @Model.Email</p>
         <p><strong>URL:</strong> <a href="@Model.URL" class="text-info">@Model.URL</a></p>
     </div>
 
     <h4 class="mb-3">Habitaciones</h4>
     <div class="list-group mb-4">
 
+@if(Model.Habitaciones.Count > 0)
+{
         @foreach(var habitacion in Model.Habitaciones)
         {
             <a class="list-group-item list-group-item-action bg-dark text-light border-secondary hover-overlay"
@@ -25,6 +28,8 @@
                 🛏️ @habitacion.tipoHabitacion.Nombre @habitacion.nroHabitacion
             </a>
         }
+
+}
     </div>
 
     <div class="d-flex gap-3">

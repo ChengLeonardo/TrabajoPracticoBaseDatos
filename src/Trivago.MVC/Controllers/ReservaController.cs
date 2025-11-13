@@ -39,6 +39,11 @@ public class ReservaController : Controller
         {
             reservas = reservas.Where(r => r.idUsuario == Convert.ToUInt32(User.FindFirst(ClaimTypes.NameIdentifier).Value)).ToList();
         }
+        else if (User.IsInRole("Hotel"))
+        {
+            reservas = reservas.Where(r => r.habitacion.hotel.Email == User.FindFirst(ClaimTypes.Email).Value).ToList();
+        }
+        Console.WriteLine("asdf");
         ReservaGetViewModel reservaGetViewModel = new()
         {
             Reservas = reservas
@@ -72,30 +77,41 @@ public class ReservaController : Controller
     [HttpPost]
     public async Task<IActionResult> PostForm(ReservaViewModel reservaViewModel)
     {
-        var Precio = reservaViewModel.reservaPostViewModel.entrada.Subtract(reservaViewModel.reservaPostViewModel.salida);
+        var Precio = reservaViewModel.reservaPostViewModel.salida.Subtract(reservaViewModel.reservaPostViewModel.entrada);
         try
         {
-        if (Precio.Days < 0)
-        {
-            throw new Exception("Fecha fin no puede ser anterior que el inicio");
-        }
-        var habitacion = await _repoHabitacionAsync.DetalleAsync((uint)reservaViewModel.reservaPostViewModel.IdHabitacionSeleccionado);
+            if (Precio.Days < 0)
+            {
+                throw new Exception("Fecha fin no puede ser anterior que el inicio");
+            }
+            var habitacion = await _repoHabitacionAsync.DetalleAsync((uint)reservaViewModel.reservaPostViewModel.IdHabitacionSeleccionado);
 
-        Reserva reserva = new Reserva()
-        {
-            habitacion = new() { idHabitacion = reservaViewModel.reservaPostViewModel.IdHabitacionSeleccionado.Value },
-            metodoPago = new() { idMetodoPago = reservaViewModel.reservaPostViewModel.IdMetodoPagoSeleccionado.Value },
-            idUsuario = Convert.ToUInt32(User.FindFirst(ClaimTypes.NameIdentifier).Value),
-            Salida = reservaViewModel.reservaPostViewModel.salida,
-            Entrada = reservaViewModel.reservaPostViewModel.entrada,
-            Telefono = reservaViewModel.reservaPostViewModel.Telefono.Value,
-            Precio = Precio.Days * habitacion.PrecioPorNoche
-        };
+            Reserva reserva = new Reserva()
+            {
+                habitacion = new() { idHabitacion = reservaViewModel.reservaPostViewModel.IdHabitacionSeleccionado.Value },
+                metodoPago = new() { idMetodoPago = reservaViewModel.reservaPostViewModel.IdMetodoPagoSeleccionado.Value },
+                idUsuario = Convert.ToUInt32(User.FindFirst(ClaimTypes.NameIdentifier).Value),
+                Salida = reservaViewModel.reservaPostViewModel.salida,
+                Entrada = reservaViewModel.reservaPostViewModel.entrada,
+                Telefono = reservaViewModel.reservaPostViewModel.Telefono.Value,
+                Precio = Precio.Days * habitacion.PrecioPorNoche
+            };
             var id = await _repoReservaAsync.AltaAsync(reserva);
         }
         catch (MySqlException ex)
         {
-            ViewBag.Error = ex.Message;
+            var habitaciones = await _repoHabitacionAsync.ListarAsync();
+            var metodoPagos = await _repoMetodoPagoAsync.ListarAsync();
+            reservaViewModel.reservaPostViewModel.habitaciones = new SelectList(items: habitaciones.ToList(), dataValueField: nameof(Habitacion.idHabitacion), dataTextField: "tipoHabitacion.Nombre", selectedValue: reservaViewModel.reservaPostViewModel.IdHabitacionSeleccionado);
+            reservaViewModel.reservaPostViewModel.metodosPago = new SelectList(items: metodoPagos.ToList(), dataValueField: nameof(MetodoPago.idMetodoPago), dataTextField: nameof(MetodoPago.TipoMedioPago), selectedValue: reservaViewModel.reservaPostViewModel.IdMetodoPagoSeleccionado);
+            if (ex.ToString().Contains("Out"))
+            {
+                ViewBag.Error = "Datos ingresados fuera del rango";
+            }
+            else
+            {
+                ViewBag.Error = ex.Message;
+            }
             return View(reservaViewModel);
         }
         catch (Exception ex)
@@ -109,6 +125,10 @@ public class ReservaController : Controller
                 ViewBag.Error = "Datos ingresados incorrectos";
 
             }
+            var habitaciones = await _repoHabitacionAsync.ListarAsync();
+            var metodoPagos = await _repoMetodoPagoAsync.ListarAsync();
+            reservaViewModel.reservaPostViewModel.habitaciones = new SelectList(items: habitaciones.ToList(), dataValueField: nameof(Habitacion.idHabitacion), dataTextField: "tipoHabitacion.Nombre", selectedValue: reservaViewModel.reservaPostViewModel.IdHabitacionSeleccionado);
+            reservaViewModel.reservaPostViewModel.metodosPago = new SelectList(items: metodoPagos.ToList(), dataValueField: nameof(MetodoPago.idMetodoPago), dataTextField: nameof(MetodoPago.TipoMedioPago), selectedValue: reservaViewModel.reservaPostViewModel.IdMetodoPagoSeleccionado);
             return View(reservaViewModel);
         }
         return RedirectToAction("Index");

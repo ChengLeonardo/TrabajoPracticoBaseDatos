@@ -28,12 +28,12 @@ public class RepoCiudadAsync : RepoDapper, IRepoCiudadAsync
                         where idCiudad = @Id
                         LIMIT 1;
                         
-                        select p.* from Ciudad c
-                        inner join Pais p on p.idPais = c.idPais
-                        where idCiudad = @Id;
-
                         select * from Hotel
                         Where idCiudad = @Id;
+
+                        select p.* from Ciudad c
+                        inner join Pais p using(idPais)
+                        where idCiudad = @Id;
                         ";
         using ( var multi = await _conexion.QueryMultipleAsync(sql, new { Id = id }))
         {

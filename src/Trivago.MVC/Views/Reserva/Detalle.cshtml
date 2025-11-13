@@ -10,16 +10,20 @@
 
     <div class="card bg-secondary text-light mb-4 border-0 shadow-sm p-3">
         <p><strong>Reserva ID:</strong> @Model.idReserva</p>
+        <p><strong>Reservado Por:</strong> @Model.usuario.Nombre</p>
         <p><strong>Precio:</strong> @Model.Precio</p>
         <p><strong>Desde:</strong> @Model.Entrada <strong>Hasta:</strong> @Model.Salida</p>
-        <p><strong>Abonado por:</strong> @Model.metodoPago.TipoMedioPago</p>
+        <p><strong>Abonado por:</strong> @Model.metodoPago.TipoMedioPago.ToString()</p>
         <p><strong>Tipo de Habitación:</strong> @Model.habitacion.tipoHabitacion.Nombre</p>
         <p><strong>Teléfono de contacto:</strong> @Model.Telefono</p>
     </div>
 
     <div class="d-flex gap-3">
         <a asp-action="Index" class="btn btn-outline-light btn-sm">🔙 Mostrar reservas</a>
+        @if(!User.IsInRole("Hotel"))
+        {
         <a asp-action="PostForm" class="btn btn-success btn-sm">➕ Agregar reserva</a>
+        }
     </div>
 </div>
 

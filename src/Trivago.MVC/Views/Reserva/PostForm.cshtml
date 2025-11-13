@@ -9,8 +9,6 @@
     <p>Agregar una reserva nueva</p>
 
     <form asp-action="PostForm" method="post" class="bg-dark p-4 rounded-4 border border-secondary shadow-sm">
-        <input type="hidden" asp-for="@Model.reservaPostViewModel.habitaciones" value="@Model.reservaPostViewModel.habitaciones"/>
-        <input type="hidden" asp-for="@Model.reservaPostViewModel.metodosPago" value="@Model.reservaPostViewModel.metodosPago"/>
         <div class="mb-3">
             <input asp-for="@Model.reservaPostViewModel.Telefono"
                    placeholder="Ingrese el teléfono de contacto"

@@ -1,3 +1,4 @@
+using System.Collections.Frozen;
 using System.Data;
 using System.Threading.Tasks;
 using Trivago.Core.Persistencia;
@@ -27,6 +28,7 @@ public class RepoHotelAsync : RepoDapper, IRepoHotelAsync
         parametros.Add("p_Direccion", hotel.Direccion);
         parametros.Add("p_Telefono", hotel.Telefono);
         parametros.Add("p_URL", hotel.URL);
+        parametros.Add("p_Email", hotel.Email);
         parametros.Add("p_idHotel",direction: ParameterDirection.Output);
                
         await _conexion.ExecuteAsync(storedProcedure, parametros);
@@ -36,47 +38,36 @@ public class RepoHotelAsync : RepoDapper, IRepoHotelAsync
     }
 
 
-public async Task<Hotel?> DetalleAsync(uint id)
-{
-    string sql = @"
+    public async Task<Hotel?> DetalleAsync(uint id)
+    {
+
+        var sql = @"
+        select * from Hotel where idHotel = @Id;
+
         SELECT 
-            ho.idHotel, ho.Nombre, ho.Direccion, ho.Telefono, ho.URL,
-            h.idHabitacion, h.idTipo, h.nroHabitacion, h.PrecioPorNoche,
-            t.idTipo, t.Nombre,
-            c.*
-        FROM Hotel ho
-        INNER JOIN Habitacion h ON ho.idHotel = h.idHotel
-        INNER JOIN TipoHabitacion t ON h.idTipo = t.idTipo
-        inner join Ciudad c On ho.idCiudad = c.idCiudad
-        WHERE ho.idHotel = @Id;
+            *
+        FROM Habitacion h
+        WHERE h.idHotel = @Id;
+
+        select * from TipoHabitacion t inner join Habitacion h on h.idTipo = t.idTipo inner join Hotel ho on ho.idHotel = h.idHotel where ho.idHotel = @Id;
+        select * from Ciudad c inner join Pais p on c.idPais = p.idPais;
     ";
-
-    var hotelDict = new Dictionary<uint, Hotel>();
-
-    var resultado = await _conexion.QueryAsync<Hotel, Habitacion, TipoHabitacion, Ciudad, Hotel>(
-        sql,
-        (ho, hab, tipo, ciudad) =>
+        Console.WriteLine("fasdfa");
+        using (var multi = await _conexion.QueryMultipleAsync(sql, new { Id = id }))
         {
-            if (!hotelDict.TryGetValue(ho.idHotel, out var hotelEntry))
+            Console.WriteLine(1);
+            var hotel = await multi.ReadSingleAsync<Hotel>();
+            if (hotel != null)
             {
-                hotelEntry = ho;
-                hotelEntry.Habitaciones = new List<Habitacion>();
-                hotelDict.Add(hotelEntry.idHotel, hotelEntry);
+                var habitaciones = await multi.ReadAsync<Habitacion>();
+                var tipoHabitacion = await multi.ReadAsync<TipoHabitacion>();
+                var ciudad = await multi.ReadAsync<Ciudad>();
+                habitaciones.ToList().ForEach(h => h.tipoHabitacion = tipoHabitacion.First());
+                hotel.Habitaciones = habitaciones.ToList();
+                hotel.ciudad = ciudad.FirstOrDefault();
             }
-
-            // Asigna el tipo a la habitación
-            hab.tipoHabitacion = tipo;
-            hotelEntry.ciudad = ciudad;
-            // Agrega la habitación si no estaba
-            hotelEntry.Habitaciones.Add(hab);
-
-            return hotelEntry;
-        },
-        new { Id = id },
-        splitOn: "idHabitacion,idTipo,idCiudad"
-    );
-
-    return hotelDict.Values.SingleOrDefault();
+            return hotel;
+        }
 }
 
     public async Task<List<Hotel>> ListarAsync()

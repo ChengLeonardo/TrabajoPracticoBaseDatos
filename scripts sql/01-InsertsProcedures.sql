@@ -45,11 +45,12 @@ CREATE PROCEDURE insert_hotel(
   IN p_Nombre VARCHAR(45),
   IN p_Direccion VARCHAR(45),
   IN p_Telefono INT,
+  in p_Email VARCHAR(40),
   IN p_URL VARCHAR(90),
   out p_idHotel int unsigned
 )
 BEGIN
-  INSERT INTO `Hotel` (`idCiudad`, `Nombre`, `Direccion`, `Telefono`, `URL`) VALUES (p_idCiudad, p_Nombre, p_Direccion, p_Telefono, p_URL);
+  INSERT INTO `Hotel` (`idCiudad`, `Nombre`, `Direccion`, `Telefono`, `Email`, `URL`) VALUES (p_idCiudad, p_Nombre, p_Direccion, p_Telefono, p_Email, p_URL);
   set p_idHotel = last_insert_id();
 END //
 

@@ -45,6 +45,7 @@ CREATE TABLE `Hotel` (
   `Nombre` VARCHAR(45) NOT NULL,
   `Direccion` VARCHAR(90) NOT NULL,
   `Telefono` VARCHAR(20) NOT NULL,
+  `Email` VARCHAR(40) NOT NULL,
   `URL` VARCHAR(90),
   PRIMARY KEY (`idHotel`),
   UNIQUE KEY `Telefono_UNIQUE` (`Telefono`),

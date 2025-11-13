@@ -35,44 +35,67 @@ public class RepoReservaAsync : RepoDapper, IRepoReservaAsync
         string sql = @"
             SELECT 
                 -- columnas de Reserva
-                r.idReserva, r.idHabitacion, r.idMetodoPago, r.Entrada, r.Salida, r.Precio, r.Telefono,
+                r.*,
                 
                 -- columnas de Habitacion
-                h.idHabitacion, h.idHotel, h.PrecioPorNoche, h.idTipo,
+                h.*,
                 
                 -- columnas de TipoHabitacion
-                t.idTipo, t.Nombre,
+                t.*,
                 
                 -- columnas de MetodoPago
-                m.idMetodoPago, m.TipoMedioPago
+                m.*,
+                u.*,
+
+                ho.*
             FROM Reserva r
             INNER JOIN Habitacion h ON r.idHabitacion = h.idHabitacion
             INNER JOIN TipoHabitacion t ON h.idTipo = t.idTipo
             INNER JOIN MetodoPago m ON r.idMetodoPago = m.idMetodoPago
+            inner join Usuario u on u.idUsuario = r.idUsuario
+            inner join Hotel ho on ho.idHotel = h.idHotel
             WHERE r.idReserva = @Id;
         ";
-
-        var resultado = await _conexion.QueryAsync<Reserva, Habitacion, TipoHabitacion, MetodoPago, Reserva>(
+        var resultado = await _conexion.QueryAsync<Reserva, Habitacion, TipoHabitacion, MetodoPago, Usuario, Hotel, Reserva>(
             sql,
-            (r, h, t, m) =>
+            (r, h, t, m, u, ho) =>
             {
                 h.tipoHabitacion = t;
+                h.hotel = ho;
                 r.habitacion = h;
                 r.metodoPago = m;
+                r.usuario = u;
                 return r;
             },
             new { Id = id },
-            splitOn: "idHabitacion,idTipo,idMetodoPago" // 👈 debe coincidir EXACTAMENTE con las columnas del SELECT
+            splitOn: "idHabitacion,idTipo,idMetodoPago,idUsuario,idHotel" // 👈 debe coincidir EXACTAMENTE con las columnas del SELECT
         );
-
         return resultado.SingleOrDefault();
     }
 
 
     public async Task<List<Reserva>> ListarAsync()
     {
-        string sql = "Select * from Reserva";
-        var resultado = await _conexion.QueryAsync<Reserva>(sql);
+                string sql = @"
+            SELECT 
+                -- columnas de Reserva
+                r.*,
+                h.*,
+                ho.*
+            FROM Reserva r
+            INNER JOIN Habitacion h ON r.idHabitacion = h.idHabitacion
+            inner join Hotel ho on ho.idHotel = h.idHotel;
+        ";
+        var resultado = await _conexion.QueryAsync<Reserva, Habitacion, Hotel, Reserva>(
+            sql,
+            (r, h, ho) =>
+            {
+                h.hotel = ho;
+                r.habitacion = h;
+                return r;
+            },
+            splitOn: "idHabitacion,idHotel" 
+        );
         return resultado.ToList();
     }
 

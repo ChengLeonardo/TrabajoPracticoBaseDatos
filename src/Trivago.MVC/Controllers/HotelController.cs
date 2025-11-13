@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -72,7 +73,8 @@ namespace Trivago.MVC.Controllers
                 Nombre = hotelViewModel.hotelPostViewModel.nombre,
                 URL = hotelViewModel.hotelPostViewModel.URL,
                 Telefono = hotelViewModel.hotelPostViewModel.Telefono,
-                Direccion = hotelViewModel.hotelPostViewModel.Direccion
+                Direccion = hotelViewModel.hotelPostViewModel.Direccion,
+                Email = User.FindFirst(ClaimTypes.Email).Value
             };
             var id = await _repoHotelAsync.AltaAsync(hotel);
             var hoteles = await _repoHotelAsync.ListarAsync();
@@ -89,7 +91,9 @@ namespace Trivago.MVC.Controllers
             }
             else
             {
+                Console.WriteLine("hoal");
                 var hotel = await _repoHotelAsync.DetalleAsync(id.Value);
+                Console.WriteLine("later");
                 return View(hotel);
             }
         }
