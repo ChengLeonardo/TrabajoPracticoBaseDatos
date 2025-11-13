@@ -47,6 +47,7 @@ public class HabitacionController : Controller
         return View(habitacionViewModel);
     }
     [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Hotel")]
     [HttpGet]
     public async Task<IActionResult> PostForm(uint? idHotel = 0, uint? idTipo = 0)
     {
@@ -66,6 +67,7 @@ public class HabitacionController : Controller
         return View(habitacionViewModel);
     }
     [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Hotel")]
     [HttpPost]
     public async Task<IActionResult> PostForm(HabitacionViewModel habitacionViewModel)
     {

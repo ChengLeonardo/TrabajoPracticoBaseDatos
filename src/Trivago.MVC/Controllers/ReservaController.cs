@@ -84,6 +84,10 @@ public class ReservaController : Controller
             {
                 throw new Exception("Fecha fin no puede ser anterior que el inicio");
             }
+            if (reservaViewModel.reservaPostViewModel.entrada < DateTime.Now  || reservaViewModel.reservaPostViewModel.salida < DateTime.Now)
+            {
+                throw new Exception("No puedes reservar con una fecha pasada");
+            }
             var habitacion = await _repoHabitacionAsync.DetalleAsync((uint)reservaViewModel.reservaPostViewModel.IdHabitacionSeleccionado);
 
             Reserva reserva = new Reserva()
