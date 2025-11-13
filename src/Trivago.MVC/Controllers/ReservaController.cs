@@ -35,7 +35,7 @@ public class ReservaController : Controller
     public async Task<IActionResult> Index()
     {
         var reservas = await _repoReservaAsync.ListarAsync();
-        if (User.IsInRole("Usuario"))
+        if (User.IsInRole("Cliente"))
         {
             reservas = reservas.Where(r => r.idUsuario == Convert.ToUInt32(User.FindFirst(ClaimTypes.NameIdentifier).Value)).ToList();
         }
